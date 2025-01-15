@@ -6,8 +6,11 @@ jobs:
     tests:
         name: Run tests
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
+
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
               with:
                 ref: ${{ github.head_ref }}
 
@@ -18,7 +21,7 @@ jobs:
               run: npm run format
 
             - name: Push changes back to Repo
-              uses: stefanzweifel/git-auto-commit-action@v4
+              uses: stefanzweifel/git-auto-commit-action@v5
               with:
                 commit_message: >
                   chore: Prettier fix frontend code style
