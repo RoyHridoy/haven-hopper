@@ -1,0 +1,27 @@
+name: Check PHP Code Style with laravel pint
+
+on: [ push, pull_request ]
+
+jobs:
+    tests:
+        name: Laravel Pint Check
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.2'
+                  extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, bcmath, soap, intl, gd, exif, iconv
+                  coverage: none
+
+            - name: Install Composer
+              run: composer install -n --prefer-dist
+
+            - name: Prepare Laravel Application
+              run: |
+                  cp .env.example .env
+                  php artisan key:generate
+
+            - name: Run Pint
+              run: ./vendor/bin/pint --test

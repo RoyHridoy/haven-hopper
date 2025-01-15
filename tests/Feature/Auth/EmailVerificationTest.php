@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
 
@@ -14,6 +15,10 @@ test('email verification screen can be rendered', function () {
 });
 
 test('email can be verified', function () {
+    if (! new User instanceof MustVerifyEmail) {
+        $this->markTestSkipped('The User Model does not implement MustVerifyEmail interface.');
+    }
+
     $user = User::factory()->unverified()->create();
 
     Event::fake();
