@@ -1,0 +1,24 @@
+name: fix-frontend-code-style-and-commit
+
+on: pull_request
+
+jobs:
+    tests:
+        name: Run tests
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                ref: ${{ github.head_ref }}
+
+            - name: Run NPM install
+              run: npm install
+
+            - name: npm run Prettier
+              run: npm run format
+
+            - name: Push changes back to Repo
+              uses: stefanzweifel/git-auto-commit-action@v4
+              with:
+                commit_message: >
+                  chore: Prettier fix frontend code style

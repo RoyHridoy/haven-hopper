@@ -4,7 +4,7 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "format": "prettier --write resources/js/Layouts/AuthenticatedLayout.vue",
+        "format": "prettier --write resources/",
         "lint": "prettier --check resources/"
     },
     "devDependencies": {
