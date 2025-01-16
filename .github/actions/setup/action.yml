@@ -22,8 +22,6 @@ runs:
   steps:
     - name: Get PHP extension cache hash
       id: get-cache-hash
-      with:
-        PHP_EXTENSIONS: ${{ inputs.php-extensions }}
       run: |
         echo hash=$(echo "${{ inputs.php-extensions }}" | md5sum | awk '{print $1}') >> $GITHUB_OUTPUT
       shell: bash
