@@ -25,7 +25,7 @@ runs:
       with:
         PHP_EXTENSIONS: ${{ inputs.php-extensions }}
       run: |
-        echo hash=$(echo "$PHP_EXTENSIONS" | md5sum | awk '{print $1}') >> $GITHUB_OUTPUT
+        echo hash=$(echo "${{ inputs.php-extensions }}" | md5sum | awk '{print $1}') >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Setup cache environment
