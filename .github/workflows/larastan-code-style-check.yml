@@ -12,6 +12,7 @@ jobs:
               uses: ./.github/actions/setup
               with:
                 php-version: 8.3
+                php-extensions: dom, curl, libxml, mbstring, zip, fileinfo
 
             - name: Install Composer
               run: composer install -n --prefer-dist
