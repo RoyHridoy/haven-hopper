@@ -1,20 +1,20 @@
 ## 🤝 Contribution
 Run Following commands before give a PR
 
-1. Check Coding Style
+### To maintain codebase we use [larastan](https://github.com/larastan/larastan), Please maintain rules.
+1. Run Static Analysis Tool to check you have no error
 ```bash
-./vendor/bin/pint
+composer analyse
 ```
 
-2. Run Static Analysis Tool
-```bash
-./vendor/bin/phpstan analyse
-```
-
-3. Check all tests are ok
+### You have to ensure that you write tests for every feature you build
+2. Check all tests are ok
 ```bash
 php artisan test
 ```
+
+## Remember, If all of above provides no error, your code will be merged
+
 
 ## 🚀 Installation Guide
 
@@ -22,7 +22,7 @@ php artisan test
 1. Clone the repository
 ```bash
 git clone https://github.com/RoyHridoy/haven-hopper.git
-cd barta
+cd haven-hopper
 ```
 
 2. Install dependencies
@@ -37,10 +37,9 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-4. Run migrations and seed the database:
+4. Run migrations:
 ```bash
 php artisan migrate
-php artisan db:seed
 ```
 
 5. Set up storage:
