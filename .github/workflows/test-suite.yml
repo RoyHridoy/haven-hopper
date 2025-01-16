@@ -7,14 +7,12 @@ jobs:
         name: Run tests
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
+            - name: Setup
+              uses: ./.github/actions/setup
               with:
-                php-version: '8.2'
-                extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
-                coverage: none
+                php-version: 8.3
 
             - name: Run Composer install
               run: composer install -n --prefer-dist
