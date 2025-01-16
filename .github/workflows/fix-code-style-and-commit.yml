@@ -21,17 +21,14 @@ jobs:
                 php-version: 8.3
                 php-extensions: json, dom, curl, libxml, mbstring
 
-            - name: Install Project Dependencies
-              run: composer install -q --no-progress --no-interaction
+            - name: Install Pint
+              run: composer global require laravel/pint
 
-            - name: NPM install cache
-              uses: c-hive/gha-npm-cache@v1
-
-            - name: Install JS Dependencies
+            - name: Install npm
               run: npm install
 
             - name: Run Pint
-              run: ./vendor/bin/pint
+              run: pint
 
             - name: Run Prettier
               run: npm run format
