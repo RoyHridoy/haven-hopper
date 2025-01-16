@@ -1,0 +1,43 @@
+name: Fix Code Style and Commit
+
+on: push
+
+jobs:
+    lint:
+        name: Fix Code Style and Commit
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                ref: ${{ github.head_ref }}
+
+            - name: Setup
+              uses: ./.github/actions/setup
+              with:
+                php-version: 8.3
+                php-extensions: json, dom, curl, libxml, mbstring
+
+            - name: Install Project Dependencies
+              run: composer install -q --no-progress --no-interaction
+
+            - name: NPM install cache
+              uses: c-hive/gha-npm-cache@v1
+
+            - name: Install JS Dependencies
+              run: npm install
+
+            - name: Run Pint
+              run: ./vendor/bin/pint
+
+            - name: Run Prettier
+              run: npm run format
+
+            - name: Push changes back to Repo
+              uses: stefanzweifel/git-auto-commit-action@v5
+              with:
+                commit_message: >
+                  chore: fix code style
