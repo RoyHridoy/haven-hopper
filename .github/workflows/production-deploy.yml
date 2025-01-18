@@ -1,0 +1,35 @@
+name: Deploy to production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          port: ${{ secrets.PORT }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: |
+            cd ~/booking/
+            export NVM_DIR=/home/${{ secrets.USERNAME }}/.nvm
+            source /home/${{ secrets.USERNAME }}/.nvm/nvm.sh
+            git checkout main
+            git pull origin main
+            npm install
+            composer install
+            npm run build
+            composer dump-autoload
+            php artisan migrate:fresh --seed
+            php artisan config:clear
+            php artisan cache:clear
+            php artisan route:clear
+            php artisan view:clear
+            php artisan optimize:clear
