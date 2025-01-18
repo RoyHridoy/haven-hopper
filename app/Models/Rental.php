@@ -39,4 +39,39 @@ class Rental extends Model
     {
         return $this->belongsToMany(Amenity::class);
     }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function galleries()
+    {
+        return $this->morphMany(Image::class, 'imageable')->where('image_role', 'gallery');
+    }
+
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable')->where('image_role', 'feature');
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
 }
