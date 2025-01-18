@@ -17,7 +17,17 @@ class LocationFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'country' => fake()->country(),
+            'city' => fake()->city(),
+            'state' => fake()->state(),
         ];
+    }
+
+    public function withCoordinates(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'latitude' => fake()->latitude(),
+            'longitude' => fake()->longitude(),
+        ]);
     }
 }

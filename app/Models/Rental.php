@@ -6,6 +6,7 @@ use App\Enums\RentalApprovalStatus;
 use App\Enums\RentalType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Rental extends Model
 {
@@ -28,4 +29,14 @@ class Rental extends Model
         'approval_status' => RentalApprovalStatus::class,
         'rental_type' => RentalType::class,
     ];
+
+    /**
+     * Get the amenities associated with the rental.
+     *
+     * @return BelongsToMany<Amenity, $this>
+     */
+    public function amenities(): BelongsToMany
+    {
+        return $this->belongsToMany(Amenity::class);
+    }
 }

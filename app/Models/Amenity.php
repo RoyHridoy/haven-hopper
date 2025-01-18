@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Amenity extends Model
 {
@@ -14,4 +15,14 @@ class Amenity extends Model
         'name',
         'icon',
     ];
+
+    /**
+     * Get the rentals associated with the amenity.
+     *
+     * @return BelongsToMany<Rental, $this>
+     */
+    public function rentals(): BelongsToMany
+    {
+        return $this->belongsToMany(Rental::class);
+    }
 }
