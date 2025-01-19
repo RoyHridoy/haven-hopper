@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             AmenitySeeder::class,
             RentalSeeder::class,
+            BookingSeeder::class,
+            ReviewSeeder::class,
         ]);
     }
 }
