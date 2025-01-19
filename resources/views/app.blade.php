@@ -17,5 +17,8 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
+        <script>
+            window.countries =  {!! json_encode(config('country')) !!};
+        </script>
     </body>
 </html>
