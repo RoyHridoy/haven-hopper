@@ -10,7 +10,7 @@ return [
         'continent' => 'Asia',
         'capital' => 'Dhaka',
         'cities' => [
-            'timezone' => ''
-        ]
+            'timezone' => '',
+        ],
     ],
 ];

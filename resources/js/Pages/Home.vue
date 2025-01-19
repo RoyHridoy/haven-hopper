@@ -60,7 +60,7 @@ defineProps({
     </header>
     <main>
         <section
-            class="bg-hero-bg relative z-10 w-full bg-cover bg-left-bottom before:absolute before:left-0 before:top-0 before:-z-10 before:h-full before:w-full before:bg-slate-950/50"
+            class="relative z-10 w-full bg-hero-bg bg-cover bg-left-bottom before:absolute before:left-0 before:top-0 before:-z-10 before:h-full before:w-full before:bg-slate-950/50"
         >
             <div class="mx-auto grid max-w-6xl grid-cols-8 items-center justify-between gap-6 py-24">
                 <div class="col-span-4 col-start-2 rounded-xl bg-white p-10 shadow-md">
@@ -114,7 +114,7 @@ defineProps({
                         <div
                             class="border-t-1 flex size-20 items-center justify-center rounded-full border-b-4 border-l-2 border-r-2 border-slate-600 transition-all duration-200 group-hover:shadow-lg"
                         >
-                            <Svg name="apartment" class="size-10" />
+                            <Svg name="apartment" class="size-10"></Svg>
                         </div>
                         <h4 class="px-5 pt-3 text-xl font-semibold text-slate-800">Apartment</h4>
                     </a>
@@ -125,7 +125,7 @@ defineProps({
                         <div
                             class="border-t-1 flex size-20 items-center justify-center rounded-full border-b-4 border-l-2 border-r-2 border-slate-600 transition-all duration-200 group-hover:shadow-lg"
                         >
-                            <Svg name="hotel" class="size-10" />
+                            <Svg name="hotel" class="size-10"></Svg>
                         </div>
                         <h4 class="px-5 pt-3 text-xl font-semibold text-slate-800">Hotel</h4>
                     </a>
@@ -136,7 +136,7 @@ defineProps({
                         <div
                             class="border-t-1 flex size-20 items-center justify-center rounded-full border-b-4 border-l-2 border-r-2 border-slate-600 transition-all duration-200 group-hover:shadow-lg"
                         >
-                            <Svg name="home" class="size-10" />
+                            <Svg name="home" class="size-10"></Svg>
                         </div>
                         <h4 class="px-5 pt-3 text-xl font-semibold text-slate-800">Guesthouse</h4>
                     </a>
@@ -146,44 +146,58 @@ defineProps({
 
         <section class="bg-gray-50 py-24">
             <div class="mx-auto max-w-6xl">
-                <div class="text-center">
+                <div class="mb-16 text-center">
                     <h2 class="text-center text-3xl font-bold text-slate-600">Featured Homes</h2>
                     <p class="mt-2 text-lg">Hand-picked selection of quality places</p>
                 </div>
-                <div class="grid grid-cols-3">
-                    <div class="gap-8 overflow-hidden rounded">
-                        <div>
-                            <img src="https://royhridoy.me/html/royme-preview/assets/img/portfolio/6.jpg" alt="" />
-                            <div>
-                                <span>$</span>
-                                350.00
-                                <span>/night</span>
+                <div class="grid grid-cols-3 gap-10">
+                    <div class="group gap-8 overflow-hidden rounded shadow-lg transition-all hover:shadow-xl">
+                        <div class="relative z-20 h-64 overflow-hidden">
+                            <span
+                                class="absolute z-10 h-full w-full bg-black/20 transition-all group-hover:bg-black/15"
+                            ></span>
+                            <img
+                                src="https://royhridoy.me/html/royme-preview/assets/img/portfolio/6.jpg"
+                                alt=""
+                                class="h-full w-full object-cover transition-all group-hover:scale-105"
+                            />
+                            <div class="absolute bottom-0 left-0 z-20 flex rounded-tr-sm bg-slate-800 px-5 text-white">
+                                <span class="text-sm">$</span>
+                                <span class="text-2xl font-semibold">350.00</span>
+                                <span class="self-end text-sm">/night</span>
+                            </div>
+                            <div
+                                class="absolute right-3 top-2 z-20 rounded bg-white px-1.5 font-semibold text-slate-800"
+                            >
+                                <div class="flex items-center gap-1">
+                                    <Svg name="star" class="size-4"></Svg>
+                                    <span>4.89</span>
+                                </div>
                             </div>
                         </div>
                         <div class="rounded-b border border-t-0 border-slate-300 p-5">
-                            <h3 class="line-clamp-1 text-lg font-medium">
-                                test ste do do daf Lorem ipsum dolor sit amet dfaso sofdi.
+                            <h3 class="text-xl font-semibold">
+                                <a href="" class="hover:text-slate-600">
+                                    Test ste do do daf Lorem ipsum dolor sit amet dfaso sofdi.
+                                </a>
                             </h3>
-                            <p class="mt-1 text-sm">Address info line 1</p>
+                            <p class="mt-0.5 text-sm text-slate-500">Address info line 1</p>
                             <ul class="mt-5 grid grid-cols-2 gap-1">
                                 <li class="flex items-center gap-1">
-                                    <Svg name="users" class="size-5" />
+                                    <Svg name="users" class="size-4"></Svg>
                                     <span>3 Guests</span>
                                 </li>
                                 <li class="flex items-center justify-end gap-1">
-                                    <Svg name="users" class="size-5" />
+                                    <Svg name="users" class="size-4"></Svg>
                                     <span>Wifi available</span>
                                 </li>
                                 <li class="flex items-center gap-1">
-                                    <Svg name="users" class="size-5" />
+                                    <Svg name="users" class="size-4"></Svg>
                                     <span>Swimming poll</span>
                                 </li>
                             </ul>
-                            <div class="mt-2">
-                                <div class="flex items-center gap-1">
-                                    <Svg name="star" class="size-5" />
-                                    <span>4.89</span>
-                                </div>
+                            <div class="mt-4">
+                                <PrimaryButton>Book Now</PrimaryButton>
                             </div>
                         </div>
                     </div>
