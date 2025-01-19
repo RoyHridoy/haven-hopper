@@ -60,7 +60,7 @@ defineProps({
     </header>
     <main>
         <section
-            class="relative z-10 w-full bg-hero-bg bg-cover bg-left-bottom before:absolute before:left-0 before:top-0 before:-z-10 before:h-full before:w-full before:bg-slate-950/50"
+            class="bg-hero-bg relative z-10 w-full bg-cover bg-left-bottom before:absolute before:left-0 before:top-0 before:-z-10 before:h-full before:w-full before:bg-slate-950/50"
         >
             <div class="mx-auto grid max-w-6xl grid-cols-8 items-center justify-between gap-6 py-24">
                 <div class="col-span-4 col-start-2 rounded-xl bg-white p-10 shadow-md">
@@ -103,42 +103,91 @@ defineProps({
             </div>
         </section>
 
-        <section class="mx-auto max-w-6xl py-24">
-            <h2 class="text-center text-3xl font-bold text-slate-600">Find a Place That Fits Your Comfort</h2>
-            <div class="mt-10 grid grid-cols-3 gap-8">
-                <a
-                    href=""
-                    class="group flex flex-col items-center justify-center bg-slate-200 py-8 text-center shadow-2xl shadow-transparent transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-xl"
-                >
-                    <div
-                        class="border-t-1 flex size-20 items-center justify-center rounded-full border-b-4 border-l-2 border-r-2 border-slate-600 transition-all duration-200 group-hover:shadow-lg"
+        <section class="py-24">
+            <div class="mx-auto max-w-6xl">
+                <h2 class="text-center text-3xl font-bold text-slate-600">Find a Place That Fits Your Comfort</h2>
+                <div class="mt-10 grid grid-cols-3 gap-8">
+                    <a
+                        href=""
+                        class="group flex flex-col items-center justify-center bg-slate-200 py-8 text-center shadow-2xl shadow-transparent transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-xl"
                     >
-                        <Svg name="apartment" class="size-10" />
-                    </div>
-                    <h4 class="px-5 pt-3 text-xl font-semibold text-slate-800">Apartment</h4>
-                </a>
-                <a
-                    href=""
-                    class="group flex flex-col items-center justify-center bg-slate-200 py-8 text-center shadow-2xl shadow-transparent transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-xl"
-                >
-                    <div
-                        class="border-t-1 flex size-20 items-center justify-center rounded-full border-b-4 border-l-2 border-r-2 border-slate-600 transition-all duration-200 group-hover:shadow-lg"
+                        <div
+                            class="border-t-1 flex size-20 items-center justify-center rounded-full border-b-4 border-l-2 border-r-2 border-slate-600 transition-all duration-200 group-hover:shadow-lg"
+                        >
+                            <Svg name="apartment" class="size-10" />
+                        </div>
+                        <h4 class="px-5 pt-3 text-xl font-semibold text-slate-800">Apartment</h4>
+                    </a>
+                    <a
+                        href=""
+                        class="group flex flex-col items-center justify-center bg-slate-200 py-8 text-center shadow-2xl shadow-transparent transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-xl"
                     >
-                        <Svg name="hotel" class="size-10" />
-                    </div>
-                    <h4 class="px-5 pt-3 text-xl font-semibold text-slate-800">Hotel</h4>
-                </a>
-                <a
-                    href=""
-                    class="group flex flex-col items-center justify-center bg-slate-200 py-8 text-center shadow-2xl shadow-transparent transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-xl"
-                >
-                    <div
-                        class="border-t-1 flex size-20 items-center justify-center rounded-full border-b-4 border-l-2 border-r-2 border-slate-600 transition-all duration-200 group-hover:shadow-lg"
+                        <div
+                            class="border-t-1 flex size-20 items-center justify-center rounded-full border-b-4 border-l-2 border-r-2 border-slate-600 transition-all duration-200 group-hover:shadow-lg"
+                        >
+                            <Svg name="hotel" class="size-10" />
+                        </div>
+                        <h4 class="px-5 pt-3 text-xl font-semibold text-slate-800">Hotel</h4>
+                    </a>
+                    <a
+                        href=""
+                        class="group flex flex-col items-center justify-center bg-slate-200 py-8 text-center shadow-2xl shadow-transparent transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-xl"
                     >
-                        <Svg name="home" class="size-10" />
+                        <div
+                            class="border-t-1 flex size-20 items-center justify-center rounded-full border-b-4 border-l-2 border-r-2 border-slate-600 transition-all duration-200 group-hover:shadow-lg"
+                        >
+                            <Svg name="home" class="size-10" />
+                        </div>
+                        <h4 class="px-5 pt-3 text-xl font-semibold text-slate-800">Guesthouse</h4>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-gray-50 py-24">
+            <div class="mx-auto max-w-6xl">
+                <div class="text-center">
+                    <h2 class="text-center text-3xl font-bold text-slate-600">Featured Homes</h2>
+                    <p class="mt-2 text-lg">Hand-picked selection of quality places</p>
+                </div>
+                <div class="grid grid-cols-3">
+                    <div class="gap-8 overflow-hidden rounded">
+                        <div>
+                            <img src="https://royhridoy.me/html/royme-preview/assets/img/portfolio/6.jpg" alt="" />
+                            <div>
+                                <span>$</span>
+                                350.00
+                                <span>/night</span>
+                            </div>
+                        </div>
+                        <div class="rounded-b border border-t-0 border-slate-300 p-5">
+                            <h3 class="line-clamp-1 text-lg font-medium">
+                                test ste do do daf Lorem ipsum dolor sit amet dfaso sofdi.
+                            </h3>
+                            <p class="mt-1 text-sm">Address info line 1</p>
+                            <ul class="mt-5 grid grid-cols-2 gap-1">
+                                <li class="flex items-center gap-1">
+                                    <Svg name="users" class="size-5" />
+                                    <span>3 Guests</span>
+                                </li>
+                                <li class="flex items-center justify-end gap-1">
+                                    <Svg name="users" class="size-5" />
+                                    <span>Wifi available</span>
+                                </li>
+                                <li class="flex items-center gap-1">
+                                    <Svg name="users" class="size-5" />
+                                    <span>Swimming poll</span>
+                                </li>
+                            </ul>
+                            <div class="mt-2">
+                                <div class="flex items-center gap-1">
+                                    <Svg name="star" class="size-5" />
+                                    <span>4.89</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <h4 class="px-5 pt-3 text-xl font-semibold text-slate-800">Guesthouse</h4>
-                </a>
+                </div>
             </div>
         </section>
     </main>
