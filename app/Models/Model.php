@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 abstract class Model extends \Illuminate\Database\Eloquent\Model
 {

@@ -35,16 +35,31 @@ class Booking extends Model
         'payment_status' => BookingPaymentStatus::class,
     ];
 
+    /**
+     * Get the user who is booked.
+     *
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Get the rental of the booking.
+     *
+     * @return BelongsTo<Rental, $this>
+     */
     public function rental(): BelongsTo
     {
         return $this->belongsTo(Rental::class);
     }
 
+    /**
+     * Get the payment of the booking.
+     *
+     * @return HasMany<Payment, $this>
+     */
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
