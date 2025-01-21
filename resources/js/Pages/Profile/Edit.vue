@@ -27,8 +27,8 @@ defineProps({
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="grid grid-cols-4 gap-8">
-                    <div class="relative col-span-1 bg-white p-6 shadow-sm sm:rounded-lg">
-                        <div class="">
+                    <div class="relative col-span-1">
+                        <div class="sticky top-7 bg-white p-6 shadow-sm sm:rounded-lg">
                             <ul class="flex flex-col space-y-2">
                                 <NavLink :href="route('profile.edit')" :active="route().current('profile.edit')"
                                     >Profile</NavLink
