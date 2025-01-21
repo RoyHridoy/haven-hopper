@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * @return array<int, array{
+ * name: string,
+ * timezone: string,
+ * country: string,
+ * country_code: string
+ * }>
+ */
+
 return [
     [
         'name' => 'Sylhet',

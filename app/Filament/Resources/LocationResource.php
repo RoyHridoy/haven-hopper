@@ -18,11 +18,24 @@ class LocationResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $supportedCountries = collect(config('country'))->map(function ($country) {
-            return [
-                $country['code'] => $country['name'],
-            ];
-        });
+        /** @var array<int, array{
+         * name: string,
+         * number: string,
+         * code: string,
+         * currency: string,
+         * flag_code: string,
+         * continent: string,
+         * capital: string,
+         * }> $countryConfig
+         */
+        $countryConfig = config('country', []);
+
+        $supportedCountries = collect($countryConfig)
+            ->map(function (array $country): array {
+                return [
+                    $country['code'] => $country['name'],
+                ];
+            });
 
         return $form
             ->schema([
@@ -31,12 +44,24 @@ class LocationResource extends Resource
                     ->options($supportedCountries),
                 Forms\Components\Select::make('city')
                     ->searchable()
-                // list of cities based on country selection
+                    // list of cities based on country selection
                     ->options(function (\Illuminate\Http\Request $request) {
                         $country = $request->get('country');
-                        $cities = collect(config('cities'))->where('country_code', $country)->map(function ($city) {
-                            return $city['name'];
-                        });
+
+                        /** @var array<int, array{
+                         * name: string,
+                         * timezone: string,
+                         * country: string,
+                         * country_code: string
+                         * }> $citiesConfig
+                         */
+                        $citiesConfig = config('cities', []);
+
+                        $cities = collect($citiesConfig)
+                            ->where('country_code', $country)
+                            ->map(function (array $city): string {
+                                return $city['name'];
+                            });
 
                         return collect($cities)->map(function ($city) {
                             return [
