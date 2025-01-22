@@ -9,7 +9,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property int $id
  * @property string $title
  * @property string $rental_type
-
  */
 class RentalResource extends JsonResource
 {
