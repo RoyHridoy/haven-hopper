@@ -1,4 +1,5 @@
 <script setup>
+import ApplicationLogo from '@/Components/ApplicationLogo.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import Svg from '@/Components/Svg.vue'
 import { Head, Link } from '@inertiajs/vue3'
@@ -19,10 +20,9 @@ defineProps({
         <div class="mx-auto flex max-w-6xl items-center justify-between">
             <div>
                 <h2 class="my-5 text-3xl font-bold text-slate-800">
-                    <a :href="route('home')" class="block">
-                        <span>haven </span>
-                        <span class="inline-block rounded-sm bg-slate-800 px-2 pb-1 text-white">hopper</span>
-                    </a>
+                    <Link :href="route('home')">
+                        <ApplicationLogo />
+                    </Link>
                 </h2>
             </div>
             <nav v-if="canLogin" class="-mx-3 flex flex-1 justify-end">
