@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Resources\BookingResource;
+use App\Models\Booking;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -16,7 +18,14 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('bookings', function () {
-    return Inertia::render('Bookings');
+    $bookings = Booking::query()
+        ->with('rental')
+        ->where('user_id', auth()->user()->id)
+        ->get();
+
+    return Inertia::render('Bookings', [
+        'bookings' => BookingResource::collection($bookings),
+    ]);
 })->middleware(['auth', 'verified'])->name('bookings');
 
 Route::middleware('auth')->group(function () {
