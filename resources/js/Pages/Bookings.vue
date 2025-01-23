@@ -20,9 +20,7 @@ const props = defineProps({
         </template>
 
         <div class="grid grid-cols-2 gap-5">
-            <template v-for="booking in bookings" :key="booking.id">
-                <BookingItem :booking />
-            </template>
+            <BookingItem v-for="booking in bookings" :key="`booking-${booking.id}`" :booking />
         </div>
     </AuthenticatedLayout>
 </template>
