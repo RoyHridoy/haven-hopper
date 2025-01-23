@@ -132,7 +132,7 @@ const showingNavigationDropdown = ref(false)
                                         >
                                         <SidebarLink
                                             :href="route('bookings.index')"
-                                            :active="route().current('bookings')"
+                                            :active="route().current('bookings.index')"
                                             >Bookings</SidebarLink
                                         >
                                     </ul>

@@ -6,7 +6,6 @@ import Svg from './Svg.vue'
 const props = defineProps({
     rental: {
         Type: Object,
-        required: true,
     },
 })
 </script>
@@ -22,33 +21,33 @@ const props = defineProps({
             />
             <div class="absolute bottom-0 left-0 z-20 flex rounded-tr-sm bg-slate-800 px-5 text-white">
                 <span class="text-sm">$</span>
-                <span class="text-2xl font-semibold">350.00</span>
+                <span class="text-2xl font-semibold">{{ rental.price.toFixed(2) }}</span>
                 <span class="self-end text-sm">/night</span>
             </div>
             <div class="absolute right-3 top-2 z-20 rounded bg-white px-1.5 font-semibold text-slate-800">
                 <div class="flex items-center gap-1">
                     <Svg name="star" class="size-4"></Svg>
-                    <span>4.89</span>
+                    <span>{{ rental.rating }}</span>
                 </div>
             </div>
         </div>
-        <div class="rounded-b border border-t-0 border-slate-300 p-5">
+        <div class="flex flex-col border-slate-300 p-5">
             <h3 class="text-xl font-semibold">
-                <a href="" class="hover:text-slate-600"> Test ste do do daf Lorem ipsum dolor sit amet dfaso sofdi. </a>
+                <a href="" class="line-clamp-2 hover:text-slate-600" :title="rental.title"> {{ rental.title }} </a>
             </h3>
-            <p class="mt-0.5 text-sm text-slate-500">Address info line 1</p>
-            <ul class="mt-5 grid grid-cols-2 gap-1">
-                <li class="flex items-center gap-1">
+            <p class="mt-0.5 text-sm text-slate-500">{{ rental.location.city }}, {{ rental.location.country }}</p>
+            <ul class="mt-5 grid grid-cols-2 gap-1 text-slate-700">
+                <li class="flex items-center gap-1.5 capitalize">
                     <Svg name="users" class="size-4"></Svg>
-                    <span>3 Guests</span>
+                    <span>{{ rental.totalGuests }} guests</span>
                 </li>
-                <li class="flex items-center justify-end gap-1">
-                    <Svg name="users" class="size-4"></Svg>
-                    <span>Wifi available</span>
-                </li>
-                <li class="flex items-center gap-1">
-                    <Svg name="users" class="size-4"></Svg>
-                    <span>Swimming poll</span>
+                <li
+                    v-for="amenity in rental.amenities"
+                    :key="`amenity-${amenity.id}`"
+                    class="flex items-center gap-1.5 capitalize"
+                >
+                    <Svg name="feature" class="size-3.5"></Svg>
+                    <span>{{ amenity.name }}</span>
                 </li>
             </ul>
             <div class="mt-4">

@@ -12,6 +12,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property int $price
  * @property int $total_guests
  * @property float $rating
+ * @property LocationResource $location
+ * @property AmenityResource $amenities
  */
 class RentalResource extends JsonResource
 {
@@ -29,6 +31,8 @@ class RentalResource extends JsonResource
             'price' => $this->price,
             'totalGuests' => $this->total_guests,
             'rating' => $this->rating,
+            'location' => new LocationResource($this->location),
+            'amenities' => AmenityResource::collection($this->amenities),
         ];
     }
 }

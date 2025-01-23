@@ -3,8 +3,6 @@
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Resources\BookingResource;
-use App\Models\Booking;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
