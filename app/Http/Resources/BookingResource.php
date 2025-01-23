@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\DTO\UserAddressDTO;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,6 +17,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property float $discount
  * @property float $total_price
  * @property int $total_guests
+ * @property array $billing_address
  */
 class BookingResource extends JsonResource
 {
@@ -38,6 +40,8 @@ class BookingResource extends JsonResource
             'totalPrice' => $this->total_price,
             'totalGuests' => $this->total_guests,
             'rental' => new RentalResource($this->whenLoaded('rental')),
+            'billingAddress' => UserAddressDTO::createFromArray($this->billing_address)->toArray(),
+            // 'billingAddress2' => $this->billing_address,
         ];
     }
 }

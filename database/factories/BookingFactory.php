@@ -32,6 +32,7 @@ class BookingFactory extends Factory
         if (in_array($status, [BookingStatus::CANCELLED, BookingStatus::REJECTED])) {
             $paymentStatus = BookingPaymentStatus::FAILED;
         }
+        $user = User::query()->where('role', UserRole::USER)->inRandomOrder()->first();
 
         return [
             'check_in_date' => $this->faker->dateTimeBetween('now', '+1 week'),
@@ -42,9 +43,18 @@ class BookingFactory extends Factory
             'discount' => $this->faker->numberBetween(0, 100),
             'tax' => $this->faker->numberBetween(0, 100),
             'convenience_fee' => $this->faker->numberBetween(0, 100),
+            'user_name' => $user->name,
+            'user_email' => $user->email,
+            'billing_address' => [
+                'country' => fake()->country(),
+                'city' => fake()->city(),
+                'state' => fake()->state(),
+                'address_line_one' => fake()->address(),
+            ],
+            'user_phone' => fake()->phoneNumber(),
             'status' => $status,
             'payment_status' => $paymentStatus,
-            'user_id' => User::query()->where('role', UserRole::USER)->inRandomOrder()->first()?->id,
+            'user_id' => $user->id,
             'rental_id' => Rental::query()->inRandomOrder()->first()->id,
         ];
     }
