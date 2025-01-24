@@ -22,10 +22,23 @@ class Report extends Model
         'status' => ReportStatus::class,
     ];
 
-    public function reportBy():BelongsTo{
+    /**
+     * Get the user who reported.
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function reportBy(): BelongsTo
+    {
         return $this->belongsTo(User::class, 'report_by');
     }
-    public function reportTo():BelongsTo{
+
+    /**
+     * Get the user who is reported.
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function reportTo(): BelongsTo
+    {
         return $this->belongsTo(User::class, 'report_to');
     }
 }

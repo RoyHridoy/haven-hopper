@@ -27,6 +27,11 @@ class Payment extends Model
         'payment_status' => PaymentStatus::class,
     ];
 
+    /**
+     * Get the booking associated with this model.
+     *
+     * @return BelongsTo<Booking, $this>
+     */
     public function booking(): BelongsTo
     {
         return $this->belongsTo(Booking::class);

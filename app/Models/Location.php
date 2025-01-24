@@ -18,6 +18,11 @@ class Location extends Model
         'longitude',
     ];
 
+    /**
+     * Get the rentals associated with the user.
+     *
+     * @return HasMany<Rental, $this>
+     */
     public function rentals() :HasMany
     {
         return $this->hasMany(Rental::class);
