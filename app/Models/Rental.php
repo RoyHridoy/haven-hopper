@@ -20,6 +20,9 @@ class Rental extends Model
     protected $fillable = [
         'title',
         'rental_type',
+        'total_guests',
+        'guest_on_requests',
+        'extra_guests_charge',
         'price',
         'description',
         'approval_status',
@@ -30,6 +33,7 @@ class Rental extends Model
 
     protected $casts = [
         'rating' => 'float',
+        'total_guests' => 'integer',
         'approval_status' => RentalApprovalStatus::class,
         'rental_type' => RentalType::class,
     ];

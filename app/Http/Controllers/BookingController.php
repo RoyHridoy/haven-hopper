@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BookingPaymentStatus;
 use App\Http\Requests\BookAvailabilityRequest;
+use App\Http\Requests\BookStoreRequest;
 use App\Http\Resources\BookingResource;
 use App\Http\Resources\RentalResource;
 use App\Models\Booking;
 use App\Models\Rental;
-use Illuminate\Http\Request;
+use App\Models\User;
+use App\Services\PaymentService\PaymentFailedException;
+use App\Services\PaymentService\PaymentProcessor;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Response;
 
 class BookingController extends Controller
@@ -31,16 +37,38 @@ class BookingController extends Controller
         ]);
     }
 
-    public function availabilityValidate(BookAvailabilityRequest $request, Rental $rental) {
+    public function availabilityValidate(BookAvailabilityRequest $request, Rental $rental)
+    {
+        $availablePaymentMethods = PaymentProcessor::availableProviders();
+
         return inertia()->render('Checkout', [
             'rental' => new RentalResource($rental->load('location')),
             'checkInDate' => $request->input('check_in_date'),
             'checkOutDate' => $request->input('check_out_date'),
+            'availablePaymentMethods' => $availablePaymentMethods,
         ]);
     }
 
-    public function checkout(Request $request)
+    public function checkout(BookStoreRequest $request, Rental $rental)
     {
-        dd($request->all());
+        $bookingData = $request->validated();
+        $bookingData['user_id'] = $request->user()->id;
+        DB::beginTransaction();
+        try {
+
+            $booking = $rental->bookings()->create($bookingData);
+
+            PaymentProcessor::process( User::where('id', auth()->user()->id)->first(), $booking, $bookingData['paymentMethod']);
+            DB::commit();
+
+        } catch (PaymentFailedException $paymentFailedException) {
+
+            $booking->update([
+                'payment_status' => BookingPaymentStatus::FAILED
+            ]);
+            DB::commit();
+        } catch(\Exception $exception){
+            DB::rollBack();
+        }
     }
 }

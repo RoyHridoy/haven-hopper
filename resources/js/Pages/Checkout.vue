@@ -21,6 +21,10 @@ const props = defineProps({
         type: Number,
         default: 0,
     },
+    availablePaymentMethods: {
+        type: Array,
+        required: true,
+    },
 })
 
 const form = useForm({
@@ -28,9 +32,17 @@ const form = useForm({
     check_out_date: props.checkOutDate,
     user_name: usePage().props.auth.user.name,
     user_email: usePage().props.auth.user.email,
-    user_phone: usePage().props.auth.user.phone,
-    total_price: props.rental.totalPrice,
+    billing_address: {
+        country: '',
+        city: '',
+        state: '',
+        address_line_one: '',
+        address_line_two: '',
+    },
+    price: props.rental.price,
+    total_price: props.rental.price,
     total_guests: props.rental.totalGuests,
+    paymentMethod: '',
 })
 
 const bookNow = () => {
@@ -38,6 +50,7 @@ const bookNow = () => {
         onError: (errors) => {
             form.errors = errors
         },
+        preserveState: true,
     })
 }
 </script>
@@ -48,7 +61,7 @@ const bookNow = () => {
         <template #header>
             <h2 class="text-xl font-bold leading-tight text-gray-800">Checkout details</h2>
         </template>
-
+        {{ rental }}
         <template #sidebar>
             <h2 class="mb-3 flex items-center gap-0.5 text-xl font-bold leading-tight text-gray-800">
                 <Svg name="check-round" class="size-6"></Svg>
@@ -91,6 +104,18 @@ const bookNow = () => {
             </div>
         </template>
 
+        <div>
+            <select v-model="form.paymentMethod">
+                <option
+                    v-for="paymentMethod in availablePaymentMethods"
+                    :key="`payment-method-${paymentMethod.name}`"
+                    :value="paymentMethod.value"
+                >
+                    {{ paymentMethod.name }}
+                </option>
+            </select>
+        </div>
+
         <section class="space-y-8 bg-white antialiased">
             {{ form }}
             <div class="lg:flex lg:items-start lg:gap-12 xl:gap-16">
@@ -100,10 +125,10 @@ const bookNow = () => {
 
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
-                                <InputLabel for="userName" value="Name" />
+                                <InputLabel for="user_name" value="Name" />
 
                                 <TextInput
-                                    id="userName"
+                                    id="user_name"
                                     type="text"
                                     class="mt-1 block w-full"
                                     v-model="form.user_name"
@@ -115,10 +140,10 @@ const bookNow = () => {
                             </div>
 
                             <div>
-                                <InputLabel for="userEmail" value="Email" />
+                                <InputLabel for="email" value="Email" />
 
                                 <TextInput
-                                    id="userEmail"
+                                    id="email"
                                     type="email"
                                     class="mt-1 block w-full"
                                     v-model="form.user_email"
@@ -130,18 +155,48 @@ const bookNow = () => {
                             </div>
 
                             <div>
-                                <InputLabel for="userPhone" value="Phone" />
+                                <InputLabel for="country" value="Country" />
 
                                 <TextInput
-                                    id="userPhone"
-                                    type="tel"
+                                    id="country"
+                                    type="text"
                                     class="mt-1 block w-full"
-                                    v-model="form.user_phone"
+                                    v-model="form.billing_address.country"
                                     required
-                                    autocomplete="phone"
+                                    autocomplete="country"
                                 />
 
-                                <InputError class="mt-2" :message="form.errors.user_phone" />
+                                <InputError class="mt-2" :message="form.errors.billing_address?.country" />
+                            </div>
+
+                            <div>
+                                <InputLabel for="city" value="City" />
+
+                                <TextInput
+                                    id="city"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    v-model="form.billing_address.city"
+                                    required
+                                    autocomplete="city"
+                                />
+
+                                <InputError class="mt-2" :message="form.errors.billing_address?.city" />
+                            </div>
+
+                            <div>
+                                <InputLabel for="state" value="State" />
+
+                                <TextInput
+                                    id="state"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    v-model="form.billing_address.state"
+                                    required
+                                    autocomplete="state"
+                                />
+
+                                <InputError class="mt-2" :message="form.errors.billing_address?.state" />
                             </div>
 
                             <div>
@@ -156,6 +211,33 @@ const bookNow = () => {
                                 />
 
                                 <InputError class="mt-2" :message="form.errors.total_guests" />
+                            </div>
+
+                            <div>
+                                <InputLabel for="addressLineOne" value="Address Line 1" />
+
+                                <TextInput
+                                    id="addressLineOne"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    v-model="form.billing_address.address_line_one"
+                                    required
+                                />
+
+                                <InputError class="mt-2" :message="form.errors.billing_address" />
+                            </div>
+
+                            <div>
+                                <InputLabel for="addressLineTwo" value="Address Line 1" />
+
+                                <TextInput
+                                    id="addressLineTwo"
+                                    type="text"
+                                    class="mt-1 block w-full"
+                                    v-model="form.billing_address.address_line_two"
+                                />
+
+                                <InputError class="mt-2" :message="form.errors.billing_address" />
                             </div>
                         </div>
                     </div>

@@ -19,6 +19,8 @@ class Booking extends Model
         'total_guests',
         'price',
         'total_price',
+        'user_name',
+        'user_email',
         'discount',
         'tax',
         'convenience_fee',
