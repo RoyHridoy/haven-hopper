@@ -14,24 +14,4 @@ class Favorite extends Model
         'user_id',
         'rental_id',
     ];
-
-    /**
-     * Get the user that owns the favorite.
-     *
-     * @return BelongsTo<User, $this>
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Get the rental that is favorited.
-     *
-     * @return BelongsTo<Rental, $this>
-     */
-    public function rental(): BelongsTo
-    {
-        return $this->belongsTo(Rental::class);
-    }
 }

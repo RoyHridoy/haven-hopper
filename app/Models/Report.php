@@ -21,24 +21,4 @@ class Report extends Model
     protected $casts = [
         'status' => ReportStatus::class,
     ];
-
-    /**
-     * Get the user who reported.
-     *
-     * @return BelongsTo<User, $this>
-     */
-    public function reportBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'report_by');
-    }
-
-    /**
-     * Get the user who is reported.
-     *
-     * @return BelongsTo<User, $this>
-     */
-    public function reportTo(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'report_to');
-    }
 }

@@ -23,34 +23,4 @@ class Review extends Model
     protected $casts = [
         'reviewer_type' => ReviewerType::class,
     ];
-
-    /**
-     * Get the user who created the review.
-     *
-     * @return BelongsTo<User, $this>
-     */
-    public function reviewBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'review_by');
-    }
-
-    /**
-     * Get the user being reviewed.
-     *
-     * @return BelongsTo<User, $this>
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Get the rental associated with the review.
-     *
-     * @return BelongsTo<Rental, $this>
-     */
-    public function rental(): BelongsTo
-    {
-        return $this->belongsTo(Rental::class);
-    }
 }
