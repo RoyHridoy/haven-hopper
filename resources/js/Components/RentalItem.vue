@@ -51,7 +51,7 @@ const props = defineProps({
                 </li>
             </ul>
             <div class="mt-4">
-                <Link :href="route('bookings.checkout', rental.id)">
+                <Link :href="route('bookings.availability', rental.id)">
                     <PrimaryButton>Book Now</PrimaryButton>
                 </Link>
             </div>
