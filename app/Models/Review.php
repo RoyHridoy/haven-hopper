@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ReviewerType;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Review extends Model
@@ -22,4 +23,20 @@ class Review extends Model
     protected $casts = [
         'reviewer_type' => ReviewerType::class,
     ];
+
+    public function reviewBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'review_by');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function rental(): BelongsTo
+    {
+        return $this->belongsTo(Rental::class);
+    }
+
 }
