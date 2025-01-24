@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ReviewerType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Review extends Model
 {

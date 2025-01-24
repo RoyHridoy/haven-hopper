@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ReportStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Report extends Model
 {
