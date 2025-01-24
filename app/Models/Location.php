@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Location extends Model
 {
@@ -23,7 +23,7 @@ class Location extends Model
      *
      * @return HasMany<Rental, $this>
      */
-    public function rentals() :HasMany
+    public function rentals(): HasMany
     {
         return $this->hasMany(Rental::class);
     }
