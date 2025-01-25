@@ -9,7 +9,7 @@ class CashProcessor
 {
     public function __construct(public User $user, public Booking $booking) {}
 
-    public function process()
+    public function process(): void
     {
         $this->booking->update([
             'payment_status' => 'paid',

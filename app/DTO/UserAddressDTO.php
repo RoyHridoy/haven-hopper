@@ -4,6 +4,9 @@ namespace App\DTO;
 
 class UserAddressDTO extends BaseDTO
 {
+    /**
+     * @return array{address_line_one: string[], address_line_two: string[], city: string[], country: string[], state: string[]}
+     */
     protected function fields(): array
     {
         return [

@@ -12,6 +12,7 @@ use App\Models\Rental;
 use App\Models\User;
 use App\Services\PaymentService\PaymentFailedException;
 use App\Services\PaymentService\PaymentProcessor;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Response;
@@ -37,7 +38,7 @@ class BookingController extends Controller
         ]);
     }
 
-    public function availabilityValidate(BookAvailabilityRequest $request, Rental $rental)
+    public function availabilityValidate(BookAvailabilityRequest $request, Rental $rental): RedirectResponse
     {
         if (! $request->input('goToCheckout')) {
             return redirect()->back();
@@ -50,7 +51,7 @@ class BookingController extends Controller
         ]);
     }
 
-    public function checkout(Request $request, Rental $rental)
+    public function checkout(Request $request, Rental $rental): Response
     {
         $availablePaymentMethods = PaymentProcessor::availableProviders();
 
@@ -62,7 +63,7 @@ class BookingController extends Controller
         ]);
     }
 
-    public function storeBooking(BookStoreRequest $request, Rental $rental)
+    public function storeBooking(BookStoreRequest $request, Rental $rental): void
     {
         $bookingData = $request->validated();
         $bookingData['user_id'] = $request->user()->id;
