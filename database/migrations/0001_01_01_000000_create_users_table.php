@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('phone')->nullable();
+            $table->boolean('want_to_host')->nullable();
             $table->string('role')->default('user');
             $table->string('status')->default('active');
             $table->rememberToken();

@@ -52,7 +52,7 @@ defineProps({
                         </Link>
                         <Link
                             v-if="canRegister"
-                            :href="route('register')"
+                            :href="route('host.index')"
                             class="rounded-sm border border-slate-300 px-4 py-2 font-bold text-slate-500 transition hover:border-slate-400 hover:text-slate-700"
                         >
                             Become a Host</Link
