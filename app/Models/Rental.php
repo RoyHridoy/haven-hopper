@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
@@ -21,6 +20,9 @@ class Rental extends Model
     protected $fillable = [
         'title',
         'rental_type',
+        'total_guests',
+        'guest_on_requests',
+        'extra_guests_charge',
         'price',
         'description',
         'approval_status',
@@ -31,6 +33,7 @@ class Rental extends Model
 
     protected $casts = [
         'rating' => 'float',
+        'total_guests' => 'integer',
         'approval_status' => RentalApprovalStatus::class,
         'rental_type' => RentalType::class,
     ];
@@ -48,11 +51,11 @@ class Rental extends Model
     /**
      * Get the location of the Rental.
      *
-     * @return HasOne<Location, $this>
+     * @return BelongsTo<Location, $this>
      */
-    public function location(): HasOne
+    public function location(): BelongsTo
     {
-        return $this->hasOne(Location::class);
+        return $this->belongsTo(Location::class);
     }
 
     /**

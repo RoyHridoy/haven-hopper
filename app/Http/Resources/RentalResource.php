@@ -9,6 +9,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property int $id
  * @property string $title
  * @property string $rental_type
+ * @property int $price
+ * @property int $total_guests
+ * @property float $rating
+ * @property LocationResource $location
+ * @property AmenityResource $amenities
  */
 class RentalResource extends JsonResource
 {
@@ -23,6 +28,11 @@ class RentalResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'type' => $this->rental_type,
+            'price' => $this->price,
+            'totalGuests' => $this->total_guests,
+            'rating' => $this->rating,
+            'location' => new LocationResource($this->location),
+            'amenities' => AmenityResource::collection($this->amenities),
         ];
     }
 }

@@ -16,6 +16,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property float $discount
  * @property float $total_price
  * @property int $total_guests
+ * @property array<string, array{country: string, city: string, state: string, address_line_one: string, address_line_two: string}> $billing_address
  */
 class BookingResource extends JsonResource
 {
@@ -38,6 +39,7 @@ class BookingResource extends JsonResource
             'totalPrice' => $this->total_price,
             'totalGuests' => $this->total_guests,
             'rental' => new RentalResource($this->whenLoaded('rental')),
+            'billingAddress' => $this->billing_address,
         ];
     }
 }

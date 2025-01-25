@@ -19,11 +19,14 @@ class Booking extends Model
         'total_guests',
         'price',
         'total_price',
+        'user_name',
+        'user_email',
         'discount',
         'tax',
         'convenience_fee',
         'status',
         'payment_status',
+        'billing_address',
         'user_id',
         'rental_id',
     ];
@@ -33,6 +36,7 @@ class Booking extends Model
         'check_out_date' => 'datetime',
         'status' => BookingStatus::class,
         'payment_status' => BookingPaymentStatus::class,
+        'billing_address' => 'array',
     ];
 
     /**

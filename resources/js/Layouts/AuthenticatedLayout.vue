@@ -121,7 +121,7 @@ const showingNavigationDropdown = ref(false)
                         <div class="grid grid-cols-4 gap-8">
                             <div class="col-span-1">
                                 <div class="sticky top-8 bg-white p-6 shadow-sm sm:rounded-lg">
-                                    <ul class="flex flex-col space-y-2">
+                                    <ul class="flex flex-col space-y-2" v-if="!$slots.sidebar">
                                         <SidebarLink :href="route('dashboard')" :active="route().current('dashboard')"
                                             >Dashboard</SidebarLink
                                         >
@@ -130,9 +130,14 @@ const showingNavigationDropdown = ref(false)
                                             :active="route().current('profile.edit')"
                                             >Profile</SidebarLink
                                         >
-                                        <SidebarLink :href="route('bookings')" :active="route().current('bookings')"
+                                        <SidebarLink
+                                            :href="route('bookings.index')"
+                                            :active="route().current('bookings.index')"
                                             >Bookings</SidebarLink
                                         >
+                                    </ul>
+                                    <ul class="flex flex-col space-y-2" v-if="$slots.sidebar">
+                                        <slot name="sidebar" />
                                     </ul>
                                 </div>
                             </div>
