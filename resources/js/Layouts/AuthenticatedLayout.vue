@@ -39,11 +39,29 @@ const showingNavigationDropdown = ref(false)
                                 </Link>
 
                                 <Link
-                                    :href="route('register')"
+                                    v-if="
+                                        !(
+                                            $page.props.auth.user.want_to_host ||
+                                            $page.props.auth.user.role === 'rental_owner'
+                                        )
+                                    "
+                                    :href="route('host.form')"
                                     class="rounded-sm border border-slate-300 px-4 py-2 font-bold text-slate-500 transition hover:border-slate-400 hover:text-slate-700"
                                 >
                                     Become a Host</Link
                                 >
+                                <div
+                                    v-if="$page.props.auth.user.want_to_host"
+                                    class="rounded-sm border border-slate-300 px-4 py-2 font-bold text-slate-500 transition hover:border-slate-400 hover:text-slate-700"
+                                >
+                                    Host: Pending
+                                </div>
+                                <div
+                                    v-if="$page.props.auth.user.role === 'rental_owner'"
+                                    class="rounded-sm border border-slate-300 px-4 py-2 font-bold text-slate-500 transition hover:border-slate-400 hover:text-slate-700"
+                                >
+                                    Host
+                                </div>
                             </div>
                         </div>
 
