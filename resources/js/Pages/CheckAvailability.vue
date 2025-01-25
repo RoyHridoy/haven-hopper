@@ -16,6 +16,7 @@ const isAvailable = ref(false)
 const form = useForm({
     check_in_date: '',
     check_out_date: '',
+    rental_id: props.rental.id,
     goToCheckout: false,
 })
 

@@ -43,6 +43,7 @@ const form = useForm({
     total_price: props.rental.price,
     total_guests: props.rental.totalGuests,
     paymentMethod: '',
+    rental_id: props.rental.id,
 })
 
 const bookNow = () => {
@@ -53,6 +54,7 @@ const bookNow = () => {
         onSuccess: () => {
             form.errors = {}
         },
+        preserveScroll: true,
         preserveState: true,
     })
 }
@@ -111,6 +113,12 @@ const bookNow = () => {
             <div class="lg:flex lg:items-start lg:gap-12 xl:gap-16">
                 <div class="min-w-0 flex-1 space-y-8">
                     <div class="space-y-4">
+                        <div
+                            v-if="form.errors.check_in_date"
+                            class="inline-block rounded bg-red-200 px-3 py-1 font-medium text-red-700"
+                        >
+                            {{ form.errors.check_in_date }}
+                        </div>
                         <h2 class="text-xl font-semibold text-gray-900">Billing Address</h2>
 
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -275,6 +283,7 @@ const bookNow = () => {
                             {{ paymentMethod.name }}
                         </option>
                     </select>
+                    <InputError class="mt-2" :message="form.errors.paymentMethod" />
                 </div>
 
                 <button

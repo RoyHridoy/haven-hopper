@@ -22,12 +22,14 @@ class BookingController extends Controller
     public function index(): Response
     {
         $bookings = Booking::query()
-            ->with('rental')
+            ->with(['rental', 'rental.amenities', 'rental.location'])
             ->where('user_id', auth()->user()->id)
+            ->latest()
             ->get();
 
         return inertia()->render('Bookings', [
             'bookings' => BookingResource::collection($bookings),
+            'message' => session('message'),
         ]);
     }
 
@@ -63,7 +65,7 @@ class BookingController extends Controller
         ]);
     }
 
-    public function storeBooking(BookStoreRequest $request, Rental $rental): void
+    public function storeBooking(BookStoreRequest $request, Rental $rental): RedirectResponse
     {
         $bookingData = $request->validated();
         $bookingData['user_id'] = $request->user()->id;
@@ -84,5 +86,9 @@ class BookingController extends Controller
         } catch (\Exception $exception) {
             DB::rollBack();
         }
+
+        return redirect()->route('bookings.index')->with([
+            'message' => 'Successfully Created Booking',
+        ]);
     }
 }
