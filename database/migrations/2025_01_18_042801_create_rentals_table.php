@@ -15,10 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('rental_type');
-            $table->integer('price');
-            $table->text('description')->nullable();
-            $table->string('approval_status')->default('pending');
+            $table->integer('price')->default(0);
+            $table->integer('total_guests')->default(1);
+            $table->integer('guest_on_requests')->default(0);
+            $table->integer('extra_guests_charge')->default(0);
             $table->float('rating')->default(0);
+            $table->longText('description')->nullable();
+            $table->string('approval_status')->default('pending');
             $table->foreignId('owner_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('location_id')->constrained()->cascadeOnDelete();
             $table->timestamps();

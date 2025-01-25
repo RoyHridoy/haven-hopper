@@ -8,14 +8,18 @@
     "require": {
         "php": "^8.2",
         "filament/filament": "^3.2",
+        "guava/filament-icon-picker": "^2.0",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/breeze": "^2.3",
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "rmsramos/activitylog": "^1.0",
+        "spatie/laravel-activitylog": "^4.9",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.14",
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3.0",
         "laravel/pail": "^1.1",

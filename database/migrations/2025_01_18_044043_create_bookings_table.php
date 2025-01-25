@@ -18,11 +18,15 @@ return new class extends Migration
             $table->integer('total_guests');
             $table->integer('price');
             $table->integer('total_price');
+            $table->string('user_name');
+            $table->string('user_email');
+            $table->text('billing_address');
             $table->integer('discount')->default(0);
             $table->float('tax')->default(0);
             $table->integer('convenience_fee')->default(0);
             $table->string('status')->default('pending');
             $table->string('payment_status')->default('pending');
+            $table->string('user_phone')->nullable();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('rental_id')->constrained('rentals')->cascadeOnDelete();
             $table->timestamps();
