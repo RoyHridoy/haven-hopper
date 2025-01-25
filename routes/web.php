@@ -8,11 +8,8 @@ use Inertia\Inertia;
 
 Route::get('/', HomeController::class)->name('home');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', fn () => Inertia::render('Dashboard'))->name('dashboard');
     Route::get('bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::get('bookings/{rental}/availability', [BookingController::class, 'checkAvailability'])->name('bookings.availability');
     Route::post('bookings/{rental}/availability', [BookingController::class, 'availabilityValidate'])->name('bookings.availabilityValidate');
