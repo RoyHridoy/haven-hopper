@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ReportStatus;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreAmenityRequest extends FormRequest
+class StoreReportRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +23,10 @@ class StoreAmenityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'icon' => 'required|string|max:255',
+            'reason' => 'required|string|max:255',
+            'status' => 'required|in:'.implode(',', ReportStatus::values()),
+            'report_by' => 'required|exists:users,id',
+            'report_to' => 'required|exists:users,id',
         ];
     }
 }
