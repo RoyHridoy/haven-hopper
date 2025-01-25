@@ -41,7 +41,7 @@ class BookAvailabilityRequest extends FormRequest
 
                     // Check for overlapping bookings
                     $overlap = Booking::where([
-                        'rental_id' => 21,
+                        'rental_id' => $this->route('rental'),
                         'status' => BookingStatus::APPROVED,
                     ])
                         ->where(function ($query) use ($checkInDate, $checkOutDate) {

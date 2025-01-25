@@ -11,27 +11,33 @@ class PaymentProcessor
     protected static array $processors = [
         'cash' => [
             'name' => 'Cash',
+            'description' => 'Pay when you check in',
             'processor' => CashProcessor::class,
         ],
     ];
 
-    public function __construct(public User $user, public Booking $booking){
+    public function __construct(public User $user, public Booking $booking)
+    {
         //
     }
 
-    public static function availableProviders(){
+    public static function availableProviders()
+    {
         $availableMethods = [];
         foreach (static::$processors as $key => $value) {
             $availableMethods[] = [
                 'value' => $key,
                 'name' => $value['name'],
+                'description' => $value['description'],
             ];
         }
+
         return $availableMethods;
     }
 
-    public static function process(User $user, Booking $booking, $provider){
-        if (!in_array($provider, array_keys(static::$processors))) {
+    public static function process(User $user, Booking $booking, $provider)
+    {
+        if (! in_array($provider, array_keys(static::$processors))) {
             throw new PaymentFailedException('Payment Processor not found');
         }
         $processorInstance = new static($user, $booking);

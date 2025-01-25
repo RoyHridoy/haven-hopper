@@ -7,13 +7,12 @@ use App\Models\User;
 
 class CashProcessor
 {
-    public function __construct(public User $user, public Booking $booking){
+    public function __construct(public User $user, public Booking $booking) {}
 
-    }
-
-    public function process(){
+    public function process()
+    {
         $this->booking->update([
-            'payment_status' => 'paid'
+            'payment_status' => 'paid',
         ]);
     }
 }

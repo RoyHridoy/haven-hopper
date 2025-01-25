@@ -50,6 +50,9 @@ const bookNow = () => {
         onError: (errors) => {
             form.errors = errors
         },
+        onSuccess: () => {
+            form.errors = {}
+        },
         preserveState: true,
     })
 }
@@ -61,7 +64,7 @@ const bookNow = () => {
         <template #header>
             <h2 class="text-xl font-bold leading-tight text-gray-800">Checkout details</h2>
         </template>
-        {{ rental }}
+
         <template #sidebar>
             <h2 class="mb-3 flex items-center gap-0.5 text-xl font-bold leading-tight text-gray-800">
                 <Svg name="check-round" class="size-6"></Svg>
@@ -104,20 +107,7 @@ const bookNow = () => {
             </div>
         </template>
 
-        <div>
-            <select v-model="form.paymentMethod">
-                <option
-                    v-for="paymentMethod in availablePaymentMethods"
-                    :key="`payment-method-${paymentMethod.name}`"
-                    :value="paymentMethod.value"
-                >
-                    {{ paymentMethod.name }}
-                </option>
-            </select>
-        </div>
-
         <section class="space-y-8 bg-white antialiased">
-            {{ form }}
             <div class="lg:flex lg:items-start lg:gap-12 xl:gap-16">
                 <div class="min-w-0 flex-1 space-y-8">
                     <div class="space-y-4">
@@ -166,7 +156,7 @@ const bookNow = () => {
                                     autocomplete="country"
                                 />
 
-                                <InputError class="mt-2" :message="form.errors.billing_address?.country" />
+                                <InputError class="mt-2" :message="form.errors.country" />
                             </div>
 
                             <div>
@@ -181,7 +171,7 @@ const bookNow = () => {
                                     autocomplete="city"
                                 />
 
-                                <InputError class="mt-2" :message="form.errors.billing_address?.city" />
+                                <InputError class="mt-2" :message="form.errors.city" />
                             </div>
 
                             <div>
@@ -196,7 +186,7 @@ const bookNow = () => {
                                     autocomplete="state"
                                 />
 
-                                <InputError class="mt-2" :message="form.errors.billing_address?.state" />
+                                <InputError class="mt-2" :message="form.errors.state" />
                             </div>
 
                             <div>
@@ -224,7 +214,7 @@ const bookNow = () => {
                                     required
                                 />
 
-                                <InputError class="mt-2" :message="form.errors.billing_address" />
+                                <InputError class="mt-2" :message="form.errors.address_line_one" />
                             </div>
 
                             <div>
@@ -237,38 +227,56 @@ const bookNow = () => {
                                     v-model="form.billing_address.address_line_two"
                                 />
 
-                                <InputError class="mt-2" :message="form.errors.billing_address" />
+                                <InputError class="mt-2" :message="form.errors.address_line_two" />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="w-full space-y-3">
+            <div class="w-full space-y-5 border-t pt-5">
                 <h2 class="text-xl font-semibold text-gray-900">Payment Details</h2>
-                <div class="mt-4">
-                    <div class="divide-y divide-gray-200">
-                        <dl class="flex items-center justify-between gap-4 py-3">
-                            <dt class="text-base font-normal text-gray-500">Price</dt>
-                            <dd class="text-base font-medium text-gray-900">$ {{ rental.price.toFixed(2) }}</dd>
-                        </dl>
+                <div class="divide-y divide-gray-200">
+                    <dl class="flex items-center justify-between gap-4 py-3">
+                        <dt class="text-base font-normal text-gray-500">Price</dt>
+                        <dd class="text-base font-medium text-gray-900">$ {{ rental.price.toFixed(2) }}</dd>
+                    </dl>
 
-                        <dl class="flex items-center justify-between gap-4 py-3">
-                            <dt class="text-base font-normal text-gray-500">Discount</dt>
-                            <dd class="text-base font-medium text-green-500">0</dd>
-                        </dl>
+                    <dl class="flex items-center justify-between gap-4 py-3">
+                        <dt class="text-base font-normal text-gray-500">Discount</dt>
+                        <dd class="text-base font-medium text-green-500">0</dd>
+                    </dl>
 
-                        <dl class="flex items-center justify-between gap-4 py-3">
-                            <dt class="text-base font-normal text-gray-500">Tax</dt>
-                            <dd class="text-base font-medium text-gray-900">{{ props.tax }}</dd>
-                        </dl>
+                    <dl class="flex items-center justify-between gap-4 py-3">
+                        <dt class="text-base font-normal text-gray-500">Tax</dt>
+                        <dd class="text-base font-medium text-gray-900">{{ props.tax }}</dd>
+                    </dl>
 
-                        <dl class="flex items-center justify-between gap-4 py-3">
-                            <dt class="text-base font-bold text-gray-900">Total</dt>
-                            <dd class="text-base font-bold text-gray-900">${{ rental.price.toFixed(2) }}</dd>
-                        </dl>
-                    </div>
+                    <dl class="flex items-center justify-between gap-4 py-3">
+                        <dt class="text-base font-bold text-gray-900">Total</dt>
+                        <dd class="text-base font-bold text-gray-900">${{ rental.price.toFixed(2) }}</dd>
+                    </dl>
                 </div>
+            </div>
+
+            <div class="space-y-4 border-t pt-5">
+                <h3 class="text-xl font-semibold text-gray-900">Choose Payment Method</h3>
+                <div class="max-w-sm">
+                    <select
+                        id="paymentMethod"
+                        v-model="form.paymentMethod"
+                        class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                    >
+                        <option
+                            v-for="paymentMethod in availablePaymentMethods"
+                            :key="`payment-method-${paymentMethod.name}`"
+                            :value="paymentMethod.value"
+                        >
+                            {{ paymentMethod.name }}
+                        </option>
+                    </select>
+                </div>
+
                 <button
                     @click="bookNow"
                     type="button"

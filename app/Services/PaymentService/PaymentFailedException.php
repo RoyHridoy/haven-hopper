@@ -4,7 +4,4 @@ namespace App\Services\PaymentService;
 
 use Exception;
 
-class PaymentFailedException extends Exception
-{
-
-}
+class PaymentFailedException extends Exception {}

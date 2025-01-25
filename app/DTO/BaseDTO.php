@@ -30,7 +30,8 @@ abstract class BaseDTO
         return $this->data;
     }
 
-    public static function validate(array $data){
+    public static function validate(array $data)
+    {
         return new static($data);
     }
 }

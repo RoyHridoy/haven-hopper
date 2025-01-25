@@ -12,7 +12,7 @@ use App\Models\Rental;
 use App\Models\User;
 use App\Services\PaymentService\PaymentFailedException;
 use App\Services\PaymentService\PaymentProcessor;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Response;
 
@@ -39,17 +39,30 @@ class BookingController extends Controller
 
     public function availabilityValidate(BookAvailabilityRequest $request, Rental $rental)
     {
+        if (! $request->input('goToCheckout')) {
+            return redirect()->back();
+        }
+
+        return redirect()->route('bookings.checkout', [
+            'rental' => $rental->id,
+            'checkInDate' => $request->input('check_in_date'),
+            'checkOutDate' => $request->input('check_out_date'),
+        ]);
+    }
+
+    public function checkout(Request $request, Rental $rental)
+    {
         $availablePaymentMethods = PaymentProcessor::availableProviders();
 
         return inertia()->render('Checkout', [
             'rental' => new RentalResource($rental->load('location')),
-            'checkInDate' => $request->input('check_in_date'),
-            'checkOutDate' => $request->input('check_out_date'),
+            'checkInDate' => $request->query('checkInDate'),
+            'checkOutDate' => $request->query('checkOutDate'),
             'availablePaymentMethods' => $availablePaymentMethods,
         ]);
     }
 
-    public function checkout(BookStoreRequest $request, Rental $rental)
+    public function storeBooking(BookStoreRequest $request, Rental $rental)
     {
         $bookingData = $request->validated();
         $bookingData['user_id'] = $request->user()->id;
@@ -58,16 +71,16 @@ class BookingController extends Controller
 
             $booking = $rental->bookings()->create($bookingData);
 
-            PaymentProcessor::process( User::where('id', auth()->user()->id)->first(), $booking, $bookingData['paymentMethod']);
+            PaymentProcessor::process(User::where('id', auth()->user()->id)->first(), $booking, $bookingData['paymentMethod']);
             DB::commit();
 
         } catch (PaymentFailedException $paymentFailedException) {
 
             $booking->update([
-                'payment_status' => BookingPaymentStatus::FAILED
+                'payment_status' => BookingPaymentStatus::FAILED,
             ]);
             DB::commit();
-        } catch(\Exception $exception){
+        } catch (\Exception $exception) {
             DB::rollBack();
         }
     }

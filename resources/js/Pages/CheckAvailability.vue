@@ -11,18 +11,25 @@ const props = defineProps({
     rental: {},
 })
 
+const isAvailable = ref(false)
+
 const form = useForm({
     check_in_date: '',
     check_out_date: '',
+    goToCheckout: false,
 })
 
 const checkAvailability = () => {
     router.post(route('bookings.availabilityValidate', props.rental.id), form, {
         onError: (errors) => {
             form.errors = errors
+            form.goToCheckout = false
+            isAvailable.value = false
         },
         onSuccess: () => {
             form.errors = {}
+            form.goToCheckout = true
+            isAvailable.value = true
         },
     })
 }
@@ -35,6 +42,7 @@ const checkAvailability = () => {
         <template #header>
             <h2 class="text-xl font-bold leading-tight text-gray-800">Check Available Date</h2>
         </template>
+
         <template #sidebar>
             <h2 class="mb-3 flex items-center gap-0.5 text-xl font-bold leading-tight text-gray-800">
                 <Svg name="check-round" class="size-6"></Svg>
@@ -101,12 +109,26 @@ const checkAvailability = () => {
                                     <InputError class="mt-2" :message="form.errors.check_out_date" />
                                 </div>
                             </div>
+
                             <button
                                 type="submit"
                                 class="flex items-center justify-center rounded-lg bg-slate-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-300"
                             >
                                 Check Availability
                             </button>
+
+                            <div v-if="isAvailable">
+                                <p class="my-5 inline-block rounded font-medium text-green-900">
+                                    ** Booking is available in this date.
+                                </p>
+                                <button
+                                    @click="form.goToCheckout = true"
+                                    type="submit"
+                                    class="flex items-center justify-center rounded-lg bg-slate-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-300"
+                                >
+                                    Go to Checkout
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
