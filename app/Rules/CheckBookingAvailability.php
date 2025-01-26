@@ -56,6 +56,10 @@ class CheckBookingAvailability implements ValidationRule
 
         if ($overlap) {
             $fail('The selected date range is already booked.');
+            session()->flash('message', [
+                'body' => 'The selected date range is already booked.',
+                'type' => 'error',
+            ]);
         }
     }
 }

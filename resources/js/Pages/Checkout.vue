@@ -113,12 +113,6 @@ const bookNow = () => {
             <div class="lg:flex lg:items-start lg:gap-12 xl:gap-16">
                 <div class="min-w-0 flex-1 space-y-8">
                     <div class="space-y-4">
-                        <div
-                            v-if="form.errors.check_in_date"
-                            class="inline-block rounded bg-red-200 px-3 py-1 font-medium text-red-700"
-                        >
-                            {{ form.errors.check_in_date }}
-                        </div>
                         <h2 class="text-xl font-semibold text-gray-900">Billing Address</h2>
 
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
