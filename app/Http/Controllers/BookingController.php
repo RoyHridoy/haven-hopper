@@ -29,7 +29,6 @@ class BookingController extends Controller
 
         return inertia()->render('Bookings', [
             'bookings' => BookingResource::collection($bookings),
-            'message' => session('message'),
         ]);
     }
 
@@ -88,7 +87,10 @@ class BookingController extends Controller
         }
 
         return redirect()->route('bookings.index')->with([
-            'message' => 'Successfully Created Booking',
+            'message' => [
+                'body' => 'Successfully Created Booking',
+                'type' => 'success',
+            ],
         ]);
     }
 }

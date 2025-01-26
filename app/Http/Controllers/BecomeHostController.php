@@ -27,7 +27,10 @@ class BecomeHostController extends Controller
         ]);
 
         return redirect()->route('dashboard')->with([
-            'message' => 'Request received. Wait for the admin approval.',
+            'message' => [
+                'body' => 'Request received. Wait for the admin approval.',
+                'type' => 'success',
+            ],
         ]);
     }
 }
