@@ -1,11 +1,19 @@
 <script setup>
 import DateRangePicker from '@/Components/DateRangePicker.vue'
 import HomeNavigation from '@/Components/HomeNavigation.vue'
-import { useForm } from '@inertiajs/vue3'
+import InputLabel from '@/Components/InputLabel.vue'
+import Pagination from '@/Components/Pagination.vue'
+import PrimaryButton from '@/Components/PrimaryButton.vue'
+import RentalItem from '@/Components/RentalItem.vue'
+import SelectInput from '@/Components/SelectInput.vue'
+import TextInput from '@/Components/TextInput.vue'
+import { ListboxLabel } from '@headlessui/vue'
+import { Head, useForm } from '@inertiajs/vue3'
 defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
-    rentals: Array,
+    rentals: Object,
+    cities: Array,
 })
 
 const form = useForm({
@@ -19,10 +27,48 @@ const submitForm = () => {
 </script>
 
 <template>
+    <Head title="Search" />
+
     <HomeNavigation :can-login :can-register />
     {{ form }}
-    <div>
-        <DateRangePicker v-model:checkInDate="form.checkInDate" v-model:checkOutDate="form.checkOutDate" />
-    </div>
-    <button @click="submitForm">Submit</button>
+    {{ cities }}
+    <!-- <pre>
+        {{ rentals }}
+    </pre> -->
+    <section class="py-16">
+        <div class="mx-auto grid max-w-6xl grid-cols-8 items-end gap-5 rounded-lg bg-gray-200/90 p-5 shadow-md">
+            <div class="col-span-2">
+                <SelectInput />
+            </div>
+            <div class="col-span-3 w-full">
+                <InputLabel class="mb-2.5 block text-sm/6 font-medium text-gray-900">Choose Dates</InputLabel>
+                <DateRangePicker v-model:checkInDate="form.checkInDate" v-model:checkOutDate="form.checkOutDate" />
+            </div>
+            <div class="col-span-2">
+                <InputLabel class="mb-2.5 block text-sm/6 font-medium text-gray-900">Who</InputLabel>
+                <input
+                    id="guest"
+                    type="number"
+                    class="h-[38px] w-full rounded border border-slate-300 placeholder:text-sm placeholder:text-slate-400"
+                    placeholder="Add Guests"
+                />
+            </div>
+            <div class="col-span-1">
+                <button
+                    class="w-full justify-center rounded bg-slate-500 py-2 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-slate-600"
+                >
+                    Search
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="mx-auto grid max-w-6xl grid-cols-3 gap-10">
+            <RentalItem v-for="rental in rentals.data" :key="`rental-${rental.id}`" :rental />
+        </div>
+        <div class="mx-auto my-20 flex items-center justify-center">
+            <Pagination class="rounded bg-gray-100 px-10 py-3 shadow-md" :pagination="rentals.links" />
+        </div>
+    </section>
 </template>
