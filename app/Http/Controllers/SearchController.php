@@ -15,17 +15,24 @@ class SearchController extends Controller
      */
     public function __invoke(Request $request): Response
     {
-        $filters = $request->only(['city', 'checkInDate', 'checkOutDate', 'total_guests', 'page']);
-        // dd($filters);
+        $query = Rental::query()->with(['location', 'amenities']);
 
-        $rentals = Rental::query()->with(['location', 'amenities'])->latest()->paginate(6);
+        if ($request->query('total_guests')) {
+            $query = $query->where('total_guests', $request->query('total_guests'));
+        }
+
+        if ($request->query('city')) {
+            $query = $query->whereHas('location', function ($query) use ($request) {
+                return $query->where('city', $request->query('city'));
+            });
+        }
 
         return inertia()->render('Search', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
-            'rentals' => $rentals,
+            'rentals' => $query->latest()->paginate(6),
             'cities' => CityResource::collection(config('cities')),
-            'filters' => $filters,
+            'filters' => $request->query(),
         ]);
     }
 }

@@ -4,6 +4,7 @@ import HomeNavigation from '@/Components/HomeNavigation.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import Pagination from '@/Components/Pagination.vue'
 import RentalItem from '@/Components/RentalItem.vue'
+import SearchNotFound from '@/Components/SearchNotFound.vue'
 import SelectInput from '@/Components/SelectInput.vue'
 import { Head, useForm } from '@inertiajs/vue3'
 
@@ -56,7 +57,7 @@ const mergePaginationLinks = (links) => {
     <Head title="Search" />
 
     <HomeNavigation :can-login :can-register />
-
+    <!-- {{ rentals.data[0] }} -->
     <section class="py-16">
         <div class="mx-auto grid max-w-6xl grid-cols-8 items-end gap-5 rounded-lg bg-gray-200/90 p-5 shadow-md">
             <div class="col-span-2">
@@ -88,10 +89,13 @@ const mergePaginationLinks = (links) => {
     </section>
 
     <section>
-        <div class="mx-auto grid max-w-6xl grid-cols-3 gap-10">
+        <div class="mx-auto grid max-w-6xl grid-cols-3 gap-10" v-if="rentals.data.length > 0">
             <RentalItem v-for="rental in rentals.data" :key="`rental-${rental.id}`" :rental />
         </div>
-        <div class="mx-auto my-20 flex items-center justify-center">
+        <div v-if="rentals.data.length === 0">
+            <SearchNotFound />
+        </div>
+        <div class="mx-auto my-20 flex items-center justify-center" v-if="rentals.links.length > 3">
             <Pagination
                 class="rounded bg-gray-100 px-10 py-3 shadow-md"
                 :pagination="mergePaginationLinks(rentals.links)"
