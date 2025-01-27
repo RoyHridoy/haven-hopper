@@ -39,7 +39,7 @@ const props = defineProps({
             <ul class="mt-5 grid grid-cols-2 gap-1 text-slate-700">
                 <li class="flex items-center gap-1.5 capitalize">
                     <Svg name="users" class="size-4"></Svg>
-                    <span>{{ rental.totalGuests }} guests</span>
+                    <span>{{ rental?.totalGuests || rental?.total_guests }} guests</span>
                 </li>
                 <li
                     v-for="amenity in rental.amenities"
