@@ -15,7 +15,7 @@ class SearchController extends Controller
      */
     public function __invoke(Request $request): Response
     {
-        $filters = $request->only(['city', 'checkInDate', 'checkOutDate', 'total_guests']);
+        $filters = $request->only(['city', 'checkInDate', 'checkOutDate', 'total_guests', 'page']);
         // dd($filters);
 
         $rentals = Rental::query()->with(['location', 'amenities'])->latest()->paginate(6);

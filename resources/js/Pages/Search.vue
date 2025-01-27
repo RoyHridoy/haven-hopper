@@ -6,6 +6,7 @@ import Pagination from '@/Components/Pagination.vue'
 import RentalItem from '@/Components/RentalItem.vue'
 import SelectInput from '@/Components/SelectInput.vue'
 import { Head, useForm } from '@inertiajs/vue3'
+
 const props = defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
@@ -27,7 +28,27 @@ const submitForm = () => {
         preserveState: true,
         replace: true,
     })
-    console.log('Form Data:', form)
+}
+
+const mergePaginationLinks = (links) => {
+    const queryParams = new URLSearchParams(window.location.search)
+
+    return links.map((link) => {
+        if (!link.url) return link
+        const url = new URL(link.url, window.location.origin)
+
+        // Append current query parameters to pagination URLs
+        queryParams.forEach((value, key) => {
+            if (key !== 'page') {
+                url.searchParams.set(key, value)
+            }
+        })
+
+        return {
+            ...link,
+            url: url.toString(),
+        }
+    })
 }
 </script>
 
@@ -51,7 +72,7 @@ const submitForm = () => {
                     v-model="form.total_guests"
                     id="guest"
                     type="number"
-                    class="h-[38px] w-full rounded border border-slate-300 placeholder:text-sm placeholder:text-slate-400"
+                    class="h-[38px] w-full rounded border border-slate-300 transition placeholder:text-sm placeholder:text-slate-400 hover:border-slate-400"
                     placeholder="Add Guests"
                 />
             </div>
@@ -71,7 +92,10 @@ const submitForm = () => {
             <RentalItem v-for="rental in rentals.data" :key="`rental-${rental.id}`" :rental />
         </div>
         <div class="mx-auto my-20 flex items-center justify-center">
-            <Pagination class="rounded bg-gray-100 px-10 py-3 shadow-md" :pagination="rentals.links" />
+            <Pagination
+                class="rounded bg-gray-100 px-10 py-3 shadow-md"
+                :pagination="mergePaginationLinks(rentals.links)"
+            />
         </div>
     </section>
 </template>
