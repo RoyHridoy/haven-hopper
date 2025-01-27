@@ -15,12 +15,17 @@ class SearchController extends Controller
      */
     public function __invoke(Request $request): Response
     {
+        $filters = $request->only(['city', 'checkInDate', 'checkOutDate', 'total_guests']);
+        // dd($filters);
+
         $rentals = Rental::query()->with(['location', 'amenities'])->latest()->paginate(6);
+
         return inertia()->render('Search', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'rentals' => $rentals,
             'cities' => CityResource::collection(config('cities')),
+            'filters' => $filters,
         ]);
     }
 }

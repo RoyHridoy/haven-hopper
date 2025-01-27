@@ -3,25 +3,30 @@ import DateRangePicker from '@/Components/DateRangePicker.vue'
 import HomeNavigation from '@/Components/HomeNavigation.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import Pagination from '@/Components/Pagination.vue'
-import PrimaryButton from '@/Components/PrimaryButton.vue'
 import RentalItem from '@/Components/RentalItem.vue'
 import SelectInput from '@/Components/SelectInput.vue'
-import TextInput from '@/Components/TextInput.vue'
-import { ListboxLabel } from '@headlessui/vue'
 import { Head, useForm } from '@inertiajs/vue3'
-defineProps({
+const props = defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
     rentals: Object,
     cities: Array,
+    filters: Object,
 })
 
 const form = useForm({
-    checkInDate: '',
-    checkOutDate: '',
+    city: props.filters.city || '',
+    checkInDate: props.filters.checkInDate || '',
+    checkOutDate: props.filters.checkOutDate || '',
+    total_guests: props.filters.total_guests || '',
 })
 
 const submitForm = () => {
+    form.get(route('search'), {
+        preserveScroll: true,
+        preserveState: true,
+        replace: true,
+    })
     console.log('Form Data:', form)
 }
 </script>
@@ -30,15 +35,11 @@ const submitForm = () => {
     <Head title="Search" />
 
     <HomeNavigation :can-login :can-register />
-    {{ form }}
-    {{ cities }}
-    <!-- <pre>
-        {{ rentals }}
-    </pre> -->
+
     <section class="py-16">
         <div class="mx-auto grid max-w-6xl grid-cols-8 items-end gap-5 rounded-lg bg-gray-200/90 p-5 shadow-md">
             <div class="col-span-2">
-                <SelectInput />
+                <SelectInput v-model="form.city" :options="cities" :default="props.filters.city" />
             </div>
             <div class="col-span-3 w-full">
                 <InputLabel class="mb-2.5 block text-sm/6 font-medium text-gray-900">Choose Dates</InputLabel>
@@ -47,6 +48,7 @@ const submitForm = () => {
             <div class="col-span-2">
                 <InputLabel class="mb-2.5 block text-sm/6 font-medium text-gray-900">Who</InputLabel>
                 <input
+                    v-model="form.total_guests"
                     id="guest"
                     type="number"
                     class="h-[38px] w-full rounded border border-slate-300 placeholder:text-sm placeholder:text-slate-400"
@@ -55,6 +57,7 @@ const submitForm = () => {
             </div>
             <div class="col-span-1">
                 <button
+                    @click="submitForm"
                     class="w-full justify-center rounded bg-slate-500 py-2 text-sm font-semibold uppercase tracking-wider text-white transition hover:bg-slate-600"
                 >
                     Search
