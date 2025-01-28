@@ -10,7 +10,7 @@ const props = defineProps({
     default: String,
 })
 
-const selected = ref(props.default || 'Choose city')
+const selected = ref(props.default || 'Choose City')
 </script>
 
 <template>

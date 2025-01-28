@@ -1,21 +1,34 @@
 <script setup>
+import DateRangePicker from '@/Components/DateRangePicker.vue'
+import Footer from '@/Components/Footer.vue'
 import HomeNavigation from '@/Components/HomeNavigation.vue'
+import InputLabel from '@/Components/InputLabel.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import RentalItem from '@/Components/RentalItem.vue'
+import SecondaryButton from '@/Components/SecondaryButton.vue'
+import SelectInput from '@/Components/SelectInput.vue'
 import Svg from '@/Components/Svg.vue'
-import { Head, Link } from '@inertiajs/vue3'
+import { Head, Link, useForm } from '@inertiajs/vue3'
 
-defineProps({
-    canLogin: {
-        type: Boolean,
-    },
-    canRegister: {
-        type: Boolean,
-    },
-    rentals: {
-        type: Array,
-    },
+const props = defineProps({
+    canLogin: Boolean,
+    canRegister: Boolean,
+    rentals: Array,
+    cities: Array,
 })
+
+const form = useForm({
+    city: '',
+    checkInDate: '',
+    checkOutDate: '',
+    total_guests: '',
+})
+
+const submitSearch = () => {
+    form.get(route('search'), {
+        preserveState: true,
+    })
+}
 </script>
 
 <template>
@@ -25,43 +38,52 @@ defineProps({
 
     <main>
         <section
-            class="relative z-10 w-full bg-hero-bg bg-cover bg-left-bottom before:absolute before:left-0 before:top-0 before:-z-10 before:h-full before:w-full before:bg-slate-950/50"
+            class="relative z-10 w-full bg-hero-bg bg-cover bg-left-bottom before:absolute before:left-0 before:top-0 before:-z-10 before:h-full before:w-full before:bg-slate-700/95"
         >
             <div class="mx-auto grid max-w-6xl grid-cols-8 items-center justify-between gap-6 py-24">
-                <div class="col-span-4 col-start-2 rounded-xl bg-white p-10 shadow-md">
-                    <h2 class="text-3xl font-bold text-slate-700">
+                <div class="col-span-4">
+                    <h2 class="text-5xl font-bold leading-snug text-slate-100">
                         Book & Experience <br />
                         Amazing Places
                     </h2>
-                    <h3 class="my-6 text-lg">A Laravel Application for Booking and Rental</h3>
+                    <h3 class="mb-10 mt-4 text-lg text-slate-100">
+                        A Laravel Application for Booking management for Rental according to locations
+                    </h3>
+                    <div>
+                        <Link :href="route('search')">
+                            <SecondaryButton class="font-bold">Book Your next trip</SecondaryButton>
+                        </Link>
+                    </div>
+                </div>
+                <div class="col-span-3 col-start-6 rounded-xl bg-white p-8 shadow-md">
+                    <h2 class="mb-3 text-2xl font-bold capitalize text-slate-700">Find your perfect place</h2>
                     <div class="flex flex-col gap-4">
                         <div>
-                            <select class="w-full rounded-sm border-slate-300 text-slate-600">
-                                <option value="location-1" disabled selected>Select Location</option>
-                                <option value="location-2">Location 2</option>
-                                <option value="location-3">Location 3</option>
-                                <option value="location-4">Location 4</option>
-                            </select>
+                            <SelectInput v-model="form.city" :options="cities" />
                         </div>
                         <div class="flex gap-5">
-                            <div class="flex w-full flex-col">
-                                <label for="startDate" class="mb-1">Arrive:</label>
-                                <input type="date" id="startDate" class="rounded-sm border-slate-300 text-slate-600" />
-                            </div>
-                            <div class="flex w-full flex-col">
-                                <label for="endDate" class="mb-1">Depart:</label>
-                                <input type="date" id="endDate" class="rounded-sm border-slate-300 text-slate-600" />
+                            <div class="w-full">
+                                <InputLabel class="mb-2.5 block text-sm/6 font-medium text-gray-900"
+                                    >Choose Dates</InputLabel
+                                >
+                                <DateRangePicker
+                                    v-model:checkInDate="form.checkInDate"
+                                    v-model:checkOutDate="form.checkOutDate"
+                                />
                             </div>
                         </div>
                         <div>
+                            <InputLabel class="mb-2.5 block text-sm/6 font-medium text-gray-900">Who</InputLabel>
                             <input
+                                v-model="form.total_guests"
+                                id="guest"
                                 type="number"
-                                class="w-full rounded-sm border border-slate-300"
-                                placeholder="Number of guests"
+                                class="h-[38px] w-full rounded border border-slate-300 transition placeholder:text-sm placeholder:text-slate-400 hover:border-slate-400"
+                                placeholder="Add Guests"
                             />
                         </div>
                         <div>
-                            <PrimaryButton>Search</PrimaryButton>
+                            <PrimaryButton @click="submitSearch">Search</PrimaryButton>
                         </div>
                     </div>
                 </div>
@@ -112,13 +134,20 @@ defineProps({
         <section class="bg-gray-50 py-24">
             <div class="mx-auto max-w-6xl">
                 <div class="mb-16 text-center">
-                    <h2 class="text-center text-3xl font-bold text-slate-600">Featured Homes</h2>
+                    <h2 class="text-center text-3xl font-bold text-slate-600">Featured Places</h2>
                     <p class="mt-2 text-lg">Hand-picked selection of quality places</p>
                 </div>
                 <div class="grid grid-cols-3 gap-10">
                     <RentalItem v-for="rental in rentals" :key="`rental-${rental.id}`" :rental />
                 </div>
             </div>
+            <div class="pt-28 text-center">
+                <h3 class="mb-5 text-3xl font-semibold text-slate-700">Want to see more available options?</h3>
+                <Link :href="route('search')">
+                    <PrimaryButton>Continue Exploring</PrimaryButton>
+                </Link>
+            </div>
         </section>
     </main>
+    <Footer />
 </template>

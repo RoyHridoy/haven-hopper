@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\Rental;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Carbon;
 
 class CheckBookingAvailability implements ValidationRule
 {
@@ -26,32 +27,24 @@ class CheckBookingAvailability implements ValidationRule
 
         if (! $rental) {
             $fail('The rental does not exists');
-
-            return;
         }
-
-        $checkInDate = request('check_in_date');
-        $checkOutDate = request('check_out_date');
 
         // Ensure check-out date exists in the request
-        if (! $checkOutDate) {
+        if (! request('check_out_date')) {
             $fail('The check-out date is required');
-
-            return;
         }
+
+        $requestCheckInDate = Carbon::parse(request('check_in_date'));
+        $requestCheckOutDate = Carbon::parse(request('check_out_date'));
 
         // Check for overlapping bookings
         $overlap = Booking::where([
             'rental_id' => $this->rentalId,
             'status' => BookingStatus::APPROVED,
         ])
-            ->where(function ($query) use ($checkInDate, $checkOutDate) {
-                $query->whereBetween('check_in_date', [$checkInDate, $checkOutDate])
-                    ->orWhereBetween('check_out_date', [$checkInDate, $checkOutDate])
-                    ->orWhere(function ($query) use ($checkInDate, $checkOutDate) {
-                        $query->whereDate('check_in_date', '<', $checkInDate)
-                            ->whereDate('check_out_date', '>', $checkOutDate);
-                    });
+            ->where(function ($query) use ($requestCheckInDate, $requestCheckOutDate) {
+                $query->where('check_in_date', '<', $requestCheckOutDate)
+                    ->where('check_out_date', '>', $requestCheckInDate);
             })->exists();
 
         if ($overlap) {
