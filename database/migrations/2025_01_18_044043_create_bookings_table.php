@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->date('check_in_date');
-            $table->time('check_in_time')->default('14:00:00');
             $table->date('check_out_date');
-            $table->time('check_out_time')->default('11:00:00');
             $table->integer('total_guests');
             $table->integer('price');
             $table->integer('total_price');

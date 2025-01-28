@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('rental_type');
+            $table->time('check_in_time')->default('14:00:00');
+            $table->time('check_out_time')->default('11:00:00');
             $table->integer('price')->default(0);
             $table->integer('total_guests')->default(1);
             $table->integer('guest_on_requests')->default(0);
