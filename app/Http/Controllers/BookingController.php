@@ -29,7 +29,6 @@ class BookingController extends Controller
 
         return inertia()->render('Bookings', [
             'bookings' => BookingResource::collection($bookings),
-            'message' => session('message'),
         ]);
     }
 
@@ -42,14 +41,11 @@ class BookingController extends Controller
 
     public function availabilityValidate(BookAvailabilityRequest $request, Rental $rental): RedirectResponse
     {
-        if (! $request->input('goToCheckout')) {
-            return redirect()->back();
-        }
-
-        return redirect()->route('bookings.checkout', [
-            'rental' => $rental->id,
-            'checkInDate' => $request->input('check_in_date'),
-            'checkOutDate' => $request->input('check_out_date'),
+        return redirect()->back()->with([
+            'message' => [
+                'body' => 'Booking Available',
+                'type' => 'success',
+            ],
         ]);
     }
 
@@ -88,7 +84,10 @@ class BookingController extends Controller
         }
 
         return redirect()->route('bookings.index')->with([
-            'message' => 'Successfully Created Booking',
+            'message' => [
+                'body' => 'Successfully Created Booking',
+                'type' => 'success',
+            ],
         ]);
     }
 }

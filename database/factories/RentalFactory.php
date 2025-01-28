@@ -26,6 +26,7 @@ class RentalFactory extends Factory
             'rental_type' => fake()->randomElement(RentalType::cases()),
             'price' => fake()->numberBetween(100, 1000),
             'description' => fake()->paragraph(),
+            'total_guests' => fake()->numberBetween(1, 5),
             'location_id' => Location::factory(),
             'owner_id' => User::query()
                 ->where('role', 'rental_owner')

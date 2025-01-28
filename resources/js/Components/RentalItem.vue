@@ -19,7 +19,7 @@ const props = defineProps({
                 alt=""
                 class="h-full w-full object-cover transition-all group-hover:scale-105"
             />
-            <div class="absolute bottom-0 left-0 z-20 flex rounded-tr-sm bg-slate-800 px-5 text-white">
+            <div class="absolute bottom-0 left-0 z-20 flex rounded-tr-sm bg-slate-600 px-5 py-1 text-white">
                 <span class="text-sm">$</span>
                 <span class="text-2xl font-semibold">{{ rental.price.toFixed(2) }}</span>
                 <span class="self-end text-sm">/night</span>
@@ -33,13 +33,15 @@ const props = defineProps({
         </div>
         <div class="flex flex-col border-slate-300 p-5">
             <h3 class="text-xl font-semibold">
-                <a href="" class="line-clamp-2 hover:text-slate-600" :title="rental.title"> {{ rental.title }} </a>
+                <a href="" class="line-clamp-2 text-slate-700 hover:text-slate-500" :title="rental.title">
+                    {{ rental.title }}
+                </a>
             </h3>
             <p class="mt-0.5 text-sm text-slate-500">{{ rental.location.city }}, {{ rental.location.country }}</p>
             <ul class="mt-5 grid grid-cols-2 gap-1 text-slate-700">
                 <li class="flex items-center gap-1.5 capitalize">
                     <Svg name="users" class="size-4"></Svg>
-                    <span>{{ rental.totalGuests }} guests</span>
+                    <span>{{ rental?.totalGuests || rental?.total_guests }} guests</span>
                 </li>
                 <li
                     v-for="amenity in rental.amenities"

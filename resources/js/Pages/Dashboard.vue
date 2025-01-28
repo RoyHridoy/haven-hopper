@@ -1,6 +1,4 @@
 <script setup>
-import NavLink from '@/Components/NavLink.vue'
-import SidebarLink from '@/Components/SidebarLink.vue'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import { Head } from '@inertiajs/vue3'
 </script>

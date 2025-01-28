@@ -32,6 +32,7 @@ class User extends Authenticatable
         'phone',
         'status',
         'role',
+        'want_to_host',
     ];
 
     /**
@@ -56,6 +57,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'role' => UserRole::class,
             'status' => UserStatus::class,
+            'want_to_host' => 'boolean',
         ];
     }
 
