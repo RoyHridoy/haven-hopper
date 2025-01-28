@@ -69,8 +69,8 @@ class BookingController extends Controller
         try {
 
             $booking = $rental->bookings()->create($bookingData);
-
             PaymentProcessor::process(User::where('id', auth()->user()->id)->first(), $booking, $bookingData['paymentMethod']);
+
             DB::commit();
 
         } catch (PaymentFailedException $paymentFailedException) {

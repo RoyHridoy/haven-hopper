@@ -2,7 +2,4 @@
 
 namespace App\Services\PaymentService\Concern;
 
-class PaymentProcessorConcern
-{
-
-}
+class PaymentProcessorConcern {}

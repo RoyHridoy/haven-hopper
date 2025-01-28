@@ -285,12 +285,12 @@
     // Fetches a payment intent and captures the client secret
     async function initialize() {
          let token = document.querySelector('input[name="_token"]').value;
+         let url = `{{ route('payment.stripe.create', $booking->id) }}`;
 
-        const { clientSecret } = await fetch("/payment/create", {
+        const { clientSecret } = await fetch(`${url}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            // add booking id, instead of items
-            body: JSON.stringify({ items, _token: token }),
+            body: JSON.stringify({ _token: token }),
         }).then((r) => r.json());
 
         elements = stripe.elements({ clientSecret });
