@@ -41,14 +41,11 @@ class BookingController extends Controller
 
     public function availabilityValidate(BookAvailabilityRequest $request, Rental $rental): RedirectResponse
     {
-        if (! $request->input('goToCheckout')) {
-            return redirect()->back();
-        }
-
-        return redirect()->route('bookings.checkout', [
-            'rental' => $rental->id,
-            'checkInDate' => $request->input('check_in_date'),
-            'checkOutDate' => $request->input('check_out_date'),
+        return redirect()->back()->with([
+            'message' => [
+                'body' => 'Booking Available',
+                'type' => 'success',
+            ],
         ]);
     }
 
