@@ -16,9 +16,11 @@ class LocationFactory extends Factory
      */
     public function definition(): array
     {
+        $cities = config('cities');
+
         return [
-            'country' => fake()->country(),
-            'city' => fake()->city(),
+            'country' => config('country')[0]['name'],
+            'city' => $cities[rand(0, count($cities) - 1)]['name'],
             'state' => fake()->state(),
         ];
     }

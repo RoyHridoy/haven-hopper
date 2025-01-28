@@ -68,4 +68,21 @@ class Booking extends Model
     {
         return $this->hasMany(Payment::class);
     }
+
+    /**
+     * Summary of scopeOverlap
+     *
+     * @param  mixed  $query
+     * @param  mixed  $checkInDate
+     * @param  mixed  $checkOutDate
+     * @param  mixed  $status
+     */
+    public function scopeOverlap($query, $checkInDate, $checkOutDate, $status): mixed
+    {
+        return $query->where('status', $status)
+            ->where(function ($query) use ($checkInDate, $checkOutDate) {
+                $query->where('check_in_date', '<', $checkOutDate)
+                    ->where('check_out_date', '>', $checkInDate);
+            });
+    }
 }

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Enums\RentalApprovalStatus;
+use App\Http\Resources\CityResource;
 use App\Http\Resources\RentalResource;
 use App\Models\Rental;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Inertia\Response;
 
 class HomeController extends Controller
@@ -26,9 +26,8 @@ class HomeController extends Controller
         );
 
         return inertia()->render('Home', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
             'rentals' => $rentals,
+            'cities' => CityResource::collection(config('cities')),
         ]);
     }
 }
