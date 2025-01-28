@@ -32,8 +32,8 @@ class Booking extends Model
     ];
 
     protected $casts = [
-        'check_in_date' => 'datetime',
-        'check_out_date' => 'datetime',
+        'check_in_date' => 'date',
+        'check_out_date' => 'date',
         'status' => BookingStatus::class,
         'payment_status' => BookingPaymentStatus::class,
         'billing_address' => 'array',
