@@ -57,7 +57,7 @@ const mergePaginationLinks = (links) => {
     <Head title="Search" />
 
     <HomeNavigation :can-login :can-register />
-    <!-- {{ rentals.data[0] }} -->
+
     <section class="py-16">
         <div class="mx-auto grid max-w-6xl grid-cols-8 items-end gap-5 rounded-lg bg-gray-200/90 p-5 shadow-md">
             <div class="col-span-2">
