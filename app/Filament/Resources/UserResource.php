@@ -6,14 +6,12 @@ use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
-use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -23,7 +21,7 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     public static function form(Form $form): Form
     {
@@ -90,6 +88,14 @@ class UserResource extends Resource
             ])
             ->actions([
                 EditAction::make(),
+                Action::make('makeHost')
+                    ->requiresConfirmation()
+                    ->action(function (User $user) {
+                        $user->update([
+                            'role' => UserRole::RENTAL_OWNER,
+                            'want_to_host' => false,
+                        ]);
+                    }),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
