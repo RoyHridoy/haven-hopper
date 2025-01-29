@@ -119,6 +119,7 @@ class BookingResource extends Resource
                     ->sortable(),
                 TextColumn::make('rental.title')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
