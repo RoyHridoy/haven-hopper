@@ -14,7 +14,7 @@ class LocationResource extends Resource
 {
     protected static ?string $model = Location::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-map-pin';
 
     public static function form(Form $form): Form
     {
@@ -34,14 +34,6 @@ class LocationResource extends Resource
             ->map(function (array $country): array {
                 return [
                     $country['name'] => $country['name'],
-                ];
-            });
-
-        $cityConfig = config('cities', []);
-        $supportedCities = collect($cityConfig)
-            ->map(function(array $city){
-                return [
-                    $city['name'] => $city['name']
                 ];
             });
 
