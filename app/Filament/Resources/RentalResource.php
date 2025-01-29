@@ -6,8 +6,8 @@ use App\Enums\RentalApprovalStatus;
 use App\Enums\RentalType;
 use App\Filament\Resources\RentalResource\Pages;
 use App\Models\Rental;
-use Filament\Forms;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -48,7 +48,13 @@ class RentalResource extends Resource
                     ->numeric()
                     ->default(0)
                     ->prefix('$'),
-                Forms\Components\Textarea::make('description')
+                Select::make('amenities')
+                    ->relationship('amenities', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable()
+                    ->required(),
+                Textarea::make('description')
                     ->columnSpanFull(),
                 Select::make('approval_status')
                     ->required()
@@ -71,21 +77,10 @@ class RentalResource extends Resource
                     ->searchable(),
                 TextColumn::make('rental_type')
                     ->searchable(),
-                TextColumn::make('check_in_time'),
-                TextColumn::make('check_out_time'),
                 TextColumn::make('price')
                     ->money()
                     ->sortable(),
                 TextColumn::make('total_guests')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('guest_on_requests')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('extra_guests_charge')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('rating')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('approval_status')
@@ -106,6 +101,22 @@ class RentalResource extends Resource
                 TextColumn::make('location.country')
                     ->numeric()
                     ->label('Country')
+                    ->sortable(),
+                TextColumn::make('amenities.name')
+                    ->badge()
+                    ->separator(', ')
+                    ->color('info'),
+
+                TextColumn::make('check_in_time'),
+                TextColumn::make('check_out_time'),
+                TextColumn::make('guest_on_requests')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('extra_guests_charge')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('rating')
+                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

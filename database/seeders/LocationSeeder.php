@@ -17,7 +17,7 @@ class LocationSeeder extends Seeder
         foreach ($cities as $city) {
             Location::create([
                 'country' => config('country')[0]['name'],
-                'city' => $city['name']
+                'city' => $city['name'],
             ]);
         }
     }
