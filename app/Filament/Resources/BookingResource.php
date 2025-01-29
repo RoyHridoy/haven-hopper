@@ -11,9 +11,12 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\MultiSelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class BookingResource extends Resource
 {
@@ -70,6 +73,10 @@ class BookingResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('rental.title')
+                    ->words(4)
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('check_in_date')
                     ->date()
                     ->sortable(),
@@ -77,7 +84,6 @@ class BookingResource extends Resource
                     ->date()
                     ->sortable(),
                 TextColumn::make('total_guests')
-                    ->numeric()
                     ->sortable(),
                 TextColumn::make('status')
                     ->searchable()
@@ -85,7 +91,7 @@ class BookingResource extends Resource
                     ->badge()
                     ->color(fn (BookingStatus $state) => match ($state) {
                         BookingStatus::APPROVED => 'success',
-                        BookingStatus::PENDING => 'pending',
+                        BookingStatus::PENDING => 'warning',
                         BookingStatus::REJECTED => 'danger',
                         BookingStatus::CANCELLED => 'warning',
                         BookingStatus::COMPLETED => 'info',
@@ -93,18 +99,19 @@ class BookingResource extends Resource
                 TextColumn::make('price')
                     ->money()
                     ->sortable(),
-                TextColumn::make('total_price')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('discount')
-                    ->numeric()
+                    ->money()
                     ->sortable(),
                 TextColumn::make('tax')
-                    ->numeric()
+                    ->money()
+                    ->sortable(),
+                TextColumn::make('total_price')
+                    ->money()
                     ->sortable(),
                 TextColumn::make('convenience_fee')
-                    ->numeric()
-                    ->sortable(),
+                    ->money()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('payment_status')
                     ->sortable()
                     ->badge()
@@ -114,12 +121,10 @@ class BookingResource extends Resource
                         BookingPaymentStatus::FAILED => 'danger',
                     }),
                 TextColumn::make('user.name')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('rental.title')
-                    ->numeric()
+                    ->sortable()
                     ->searchable()
-                    ->sortable(),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visible(fn () => self::isAvailable()),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -130,20 +135,52 @@ class BookingResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('payment_status')
+                MultiSelectFilter::make('payment_status')
                     ->options(BookingPaymentStatus::class),
-                SelectFilter::make('status')
+                MultiSelectFilter::make('status')
                     ->options(BookingStatus::class)
                     ->label('Approve Status'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make()
+                    ->visible(fn () => self::isAvailable()),
+                /** TODO:
+                 * Approve and reject button only available on want to book page
+                 * When approve booking, validate checkInDate and checkOutDate that slot is available or not
+                 * Add Image for rental
+                 * total price calculate
+                 * write validation for amenities and locations
+                 */
+                Action::make('approve')
+                    ->requiresConfirmation()
+                    ->action(function (Booking $booking) {
+                        $booking->update([
+                            'status' => BookingStatus::APPROVED,
+                            'payment_status' => BookingPaymentStatus::PAID,
+                        ]);
+                    }),
+                Action::make('reject')
+                    ->requiresConfirmation()
+                    ->action(function (Booking $booking) {
+                        $booking->update([
+                            'status' => BookingStatus::REJECTED,
+                        ]);
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->modifyQueryUsing(function (Builder $query) {
+                if (filament()->getCurrentPanel()->getId() === 'host') {
+                    $query->whereHas('rental', function ($query) {
+                        $query->where('owner_id', auth()->id());
+                    });
+                }
+
+                return $query;
+            });
     }
 
     public static function getRelations(): array
@@ -159,5 +196,10 @@ class BookingResource extends Resource
             'index' => Pages\ListBookings::route('/'),
             'edit' => Pages\EditBooking::route('/{record}/edit'),
         ];
+    }
+
+    public static function isAvailable(): bool
+    {
+        return filament()->getCurrentPanel()->getId() === 'admin';
     }
 }
