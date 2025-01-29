@@ -18,7 +18,6 @@ class AmenityFactory extends Factory
     {
         return [
             'name' => fake()->word(),
-            'icon' => fake()->word(),
         ];
     }
 }

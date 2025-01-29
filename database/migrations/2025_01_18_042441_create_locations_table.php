@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('country');
             $table->string('city');
-            $table->string('state');
+            $table->string('state')->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
             $table->timestamps();

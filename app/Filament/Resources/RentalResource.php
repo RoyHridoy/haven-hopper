@@ -2,59 +2,70 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\RentalApprovalStatus;
+use App\Enums\RentalType;
 use App\Filament\Resources\RentalResource\Pages;
 use App\Models\Rental;
-use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class RentalResource extends Resource
 {
     protected static ?string $model = Rental::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-home-modern';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('title')
+                TextInput::make('title')
                     ->required(),
-                Forms\Components\TextInput::make('rental_type')
-                    ->required(),
-                Forms\Components\TextInput::make('price')
+                Select::make('rental_type')
+                    ->required()
+                    ->options(RentalType::class),
+                TextInput::make('price')
                     ->required()
                     ->numeric()
                     ->default(0)
                     ->prefix('$'),
-                Forms\Components\TextInput::make('total_guests')
+                TextInput::make('total_guests')
                     ->required()
                     ->numeric()
                     ->default(1),
-                Forms\Components\TextInput::make('guest_on_requests')
+                TextInput::make('guest_on_requests')
                     ->required()
                     ->numeric()
                     ->default(0),
-                Forms\Components\TextInput::make('extra_guests_charge')
+                TextInput::make('extra_guests_charge')
                     ->required()
                     ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('rating')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\Textarea::make('description')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('approval_status')
+                    ->default(0)
+                    ->prefix('$'),
+                Select::make('amenities')
+                    ->relationship('amenities', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable()
                     ->required(),
-                Forms\Components\Select::make('owner_id')
+                Textarea::make('description')
+                    ->columnSpanFull(),
+                Select::make('approval_status')
+                    ->required()
+                    ->options(RentalApprovalStatus::class)
+                    ->default(RentalApprovalStatus::PENDING),
+                Select::make('owner_id')
                     ->relationship('owner', 'name')
                     ->required(),
-                Forms\Components\TextInput::make('location_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('location_id')
+                    ->relationship('location', 'city')
+                    ->required(),
             ]);
     }
 
@@ -62,31 +73,49 @@ class RentalResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')
+                TextColumn::make('title')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('rental_type')
+                TextColumn::make('rental_type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('price')
+                TextColumn::make('price')
                     ->money()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('total_guests')
+                TextColumn::make('total_guests')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('guest_on_requests')
+                TextColumn::make('approval_status')
+                    ->searchable()
+                    ->badge()
+                    ->color(fn (RentalApprovalStatus $state) => match ($state) {
+                        RentalApprovalStatus::APPROVED => 'success',
+                        RentalApprovalStatus::PENDING => '',
+                        RentalApprovalStatus::REJECTED => 'danger',
+                    }),
+                TextColumn::make('owner.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('extra_guests_charge')
+                TextColumn::make('location.city')
+                    ->numeric()
+                    ->label('City')
+                    ->sortable(),
+                TextColumn::make('location.country')
+                    ->numeric()
+                    ->label('Country')
+                    ->sortable(),
+                TextColumn::make('amenities.name')
+                    ->badge()
+                    ->separator(', ')
+                    ->color('info'),
+
+                TextColumn::make('check_in_time'),
+                TextColumn::make('check_out_time'),
+                TextColumn::make('guest_on_requests')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('rating')
+                TextColumn::make('extra_guests_charge')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('approval_status')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('owner.name')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('location_id')
+                TextColumn::make('rating')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

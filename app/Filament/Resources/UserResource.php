@@ -2,45 +2,55 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\UserRole;
+use App\Enums\UserStatus;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
-use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required(),
-                Forms\Components\TextInput::make('email')
+                TextInput::make('name')
+                    ->required()
+                    ->string(),
+                TextInput::make('email')
                     ->email()
                     ->required(),
-                Forms\Components\TextInput::make('password')
+                TextInput::make('password')
                     ->password()
                     ->required(),
-                Forms\Components\TextInput::make('password_confirmation')
+                TextInput::make('password_confirmation')
                     ->password()
                     ->required()
                     ->same('password')
                     ->label('Confirm Password'),
-                Forms\Components\TextInput::make('phone')
-                    ->tel(),
-                Forms\Components\Select::make('role')
-                    ->options(config('site.user.roles'))
+                TextInput::make('phone')
+                    ->tel()
+                    ->nullable(),
+                Select::make('role')
+                    ->options(UserRole::class)
                     ->label('Role'),
-                Forms\Components\Select::make('status')
-                    ->options(config('site.user.statuses'))
-                    ->label('Status'),
+                Select::make('status')
+                    ->options(UserStatus::class)
+                    ->label('Status')
+                    ->default(UserStatus::ACTIVE),
             ]);
     }
 
@@ -48,24 +58,26 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('phone')
+                TextColumn::make('phone')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('role')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
+                TextColumn::make('role')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('status')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -75,11 +87,19 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
+                Action::make('makeHost')
+                    ->requiresConfirmation()
+                    ->action(function (User $user) {
+                        $user->update([
+                            'role' => UserRole::RENTAL_OWNER,
+                            'want_to_host' => false,
+                        ]);
+                    }),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
