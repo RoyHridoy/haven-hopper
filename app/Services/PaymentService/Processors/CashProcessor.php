@@ -8,12 +8,15 @@ use App\Models\User;
 
 class CashProcessor
 {
-    public function __construct(public User $user, public Booking $booking) {}
-
-    public function process(): void
+    public function process(User $user, Booking $booking, object $processor): mixed
     {
-        $this->booking->update([
-            'payment_status' => BookingPaymentStatus::PENDING,
+        $booking->update(['payment_status' => BookingPaymentStatus::PENDING]);
+
+        return redirect()->to(route('bookings.index'))->with([
+            'message' => [
+                'body' => 'You booking is created. Wait for admin approval',
+                'type' => 'warning',
+            ],
         ]);
     }
 }

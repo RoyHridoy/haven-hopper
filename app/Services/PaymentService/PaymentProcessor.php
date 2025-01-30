@@ -2,9 +2,11 @@
 
 namespace App\Services\PaymentService;
 
+use App\Enums\BookingPaymentStatus;
 use App\Models\Booking;
 use App\Models\User;
 use App\Services\PaymentService\Processors\CashProcessor;
+use App\Services\PaymentService\Processors\StripeProcessor;
 
 class PaymentProcessor
 {
@@ -17,11 +19,17 @@ class PaymentProcessor
             'description' => 'Pay when you checked in',
             'processor' => CashProcessor::class,
         ],
+        'stripe' => [
+            'name' => 'Stripe',
+            'description' => 'Pay online using your credit card',
+            'processor' => StripeProcessor::class,
+        ],
     ];
 
-    public function __construct(public User $user, public Booking $booking)
+    public function __construct(public ?string $successUrl = null, public ?string $cancelUrl = null)
     {
-        //
+        $this->successUrl = route('payment.stripe.success');
+        $this->cancelUrl = route('payment.stripe.failed');
     }
 
     /**
@@ -30,6 +38,7 @@ class PaymentProcessor
     public static function availableProviders(): array
     {
         $availableMethods = [];
+
         foreach (static::$processors as $key => $value) {
             $availableMethods[] = [
                 'value' => $key,
@@ -41,21 +50,49 @@ class PaymentProcessor
         return $availableMethods;
     }
 
-    public static function process(User $user, Booking $booking, string $provider): void
+    public function process(User $user, Booking $booking, string $provider): mixed
+    {
+
+        if ($this->hasProcessor($provider) === false) {
+            $booking->update(['payment_status' => BookingPaymentStatus::FAILED]);
+
+            return redirect()->to($this->cancelUrl);
+
+        }
+
+        $processor = $this->getProcessor($provider);
+
+        return $processor->process($user, $booking, $this);
+    }
+
+    public function getProcessor(string $provider): mixed
     {
         if (! in_array($provider, array_keys(static::$processors))) {
             throw new PaymentFailedException('Payment Processor not found');
         }
 
-        $processorInstance = new self($user, $booking);
-
         $currentProcessor = static::$processors[$provider]['processor'];
 
-        try {
-            $processor = new $currentProcessor($processorInstance->user, $processorInstance->booking);
-            $processor->process();
-        } catch (\Exception $th) {
-            throw new PaymentFailedException('Payment Failed');
-        }
+        return new $currentProcessor;
+    }
+
+    public static function create(?string $successUrl = null, ?string $cancelUrl = null): self
+    {
+        return new self($successUrl, $cancelUrl);
+    }
+
+    public function hasProcessor(string $providerName): bool
+    {
+        return array_key_exists($providerName, static::$processors);
+    }
+
+    public function getSuccessUrl(): string
+    {
+        return $this->successUrl;
+    }
+
+    public function getCancelUrl(): string
+    {
+        return $this->cancelUrl;
     }
 }

@@ -31,10 +31,15 @@ class BookStoreRequest extends FormRequest
         UserAddressDTO::validate($this->billing_address);
 
         return [
-            'rental_id' => ['required', 'exists:rentals', new CheckUserBookingAbility($this->rental_id)],
-            'check_in_date' => ['required', 'date', 'after_or_equal:today', new CheckBookingDateAvailability($this->rental_id)],
+            'check_in_date' => [
+                'required',
+                'date',
+                'after_or_equal:today',
+                new CheckBookingDateAvailability($this->rental_id),
+                new CheckUserBookingAbility($this->rental_id),
+            ],
             'check_out_date' => ['required', 'date', 'after:check_in_date'],
-            'total_guests' => ['required', 'numeric', new TotalGuests($this->rental_id)],
+            'total_guests' => ['required', 'numeric', 'min:1', new TotalGuests($this->rental_id)],
             'price' => ['required', 'numeric'],
             'total_price' => ['required', 'numeric'],
             'user_name' => ['required', 'string'],

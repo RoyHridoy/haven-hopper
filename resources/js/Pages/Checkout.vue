@@ -5,7 +5,7 @@ import Svg from '@/Components/Svg.vue'
 import TextInput from '@/Components/TextInput.vue'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import { Head, router, useForm, usePage } from '@inertiajs/vue3'
-import { ref } from 'vue'
+import { useToast } from 'vue-toastification'
 
 const props = defineProps({
     rental: {},
@@ -42,7 +42,7 @@ const form = useForm({
         address_line_two: '',
     },
     price: props.rental.price,
-    total_price: props.rental.price,
+    total_price: props.totalPrice,
     total_guests: props.rental.totalGuests,
     paymentMethod: '',
     rental_id: props.rental.id,
@@ -52,6 +52,9 @@ const bookNow = () => {
     router.post(route('bookings.checkout', props.rental.id), form, {
         onError: (errors) => {
             form.errors = errors
+            if (form.errors?.check_in_date) {
+                useToast()('The selected date range is already booked.', { type: 'error' })
+            }
         },
         onSuccess: () => {
             form.errors = {}
