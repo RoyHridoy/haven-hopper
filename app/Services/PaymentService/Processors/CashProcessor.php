@@ -14,8 +14,8 @@ class CashProcessor
 
         return redirect()->to(route('bookings.index'))->with([
             'message' => [
-                'body' => 'You have successfully created.',
-                'type' => 'success',
+                'body' => 'You booking is created. Wait for admin approval',
+                'type' => 'warning',
             ],
         ]);
     }
