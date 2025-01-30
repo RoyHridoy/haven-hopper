@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\BookingStatus;
-use App\Enums\RentalApprovalStatus;
 use App\Http\Resources\CityResource;
 use App\Models\Rental;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Response;
 
@@ -19,17 +16,15 @@ class SearchController extends Controller
     {
         $rentals = Rental::query()
             ->with(['location', 'amenities'])
-            ->where('approval_status', RentalApprovalStatus::APPROVED)
+            ->approved()
             ->when($request->query('total_guests'),
                 fn ($query, $totalGuest) => $query->where('total_guests', $totalGuest)
             )
             ->when($request->query('checkInDate') && $request->query('checkOutDate'), function ($query) use ($request) {
-                $checkInDate = Carbon::parse($request->query('checkInDate'));
-                $checkOutDate = Carbon::parse($request->query('checkOutDate'));
-                $query = $query->whereDoesntHave('bookings', fn ($query) => $query->overlap($checkInDate, $checkOutDate, BookingStatus::APPROVED));
+                $query->availableIn($request->query('checkInDate'), $request->query('checkOutDate'));
             })
             ->when($request->query('city'), function ($query, $cityName) {
-                $query = $query->whereHas('location', fn ($query) => $query->where('city', $cityName));
+                $query->byCity($cityName);
             })->latest()
             ->paginate($request->per_page ?? 6)
             ->withQueryString();

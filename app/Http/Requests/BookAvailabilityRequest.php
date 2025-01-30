@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\CheckBookingAvailability;
+use App\Rules\CheckBookingDateAvailability;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BookAvailabilityRequest extends FormRequest
@@ -23,7 +23,7 @@ class BookAvailabilityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'check_in_date' => ['required', 'date', 'after_or_equal:today', new CheckBookingAvailability($this->rental_id)],
+            'check_in_date' => ['required', 'date', 'after_or_equal:today', new CheckBookingDateAvailability($this->rental_id)],
             'check_out_date' => ['required', 'date', 'after:check_in_date'],
         ];
     }

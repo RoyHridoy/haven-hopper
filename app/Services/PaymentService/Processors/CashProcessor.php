@@ -2,6 +2,7 @@
 
 namespace App\Services\PaymentService\Processors;
 
+use App\Enums\BookingPaymentStatus;
 use App\Models\Booking;
 use App\Models\User;
 
@@ -12,7 +13,7 @@ class CashProcessor
     public function process(): void
     {
         $this->booking->update([
-            'payment_status' => 'paid',
+            'payment_status' => BookingPaymentStatus::PENDING,
         ]);
     }
 }
