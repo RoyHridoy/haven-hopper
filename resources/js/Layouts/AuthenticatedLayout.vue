@@ -159,7 +159,7 @@ const showingNavigationDropdown = ref(false)
                                     </ul>
                                 </div>
                             </div>
-                            <div class="col-span-3 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                            <div class="col-span-3 bg-white shadow-sm sm:rounded-lg">
                                 <!-- Page Heading -->
                                 <header class="" v-if="$slots.header">
                                     <div class="border-b px-4 py-6 sm:px-6">
