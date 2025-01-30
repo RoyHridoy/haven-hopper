@@ -99,10 +99,8 @@ class Rental extends Model
         return $this->hasMany(Favorite::class);
     }
 
-
     /**
-     * @param mixed $query
-     * @return mixed
+     * @param  mixed  $query
      */
     public function scopeApproved($query): mixed
     {
@@ -110,10 +108,9 @@ class Rental extends Model
     }
 
     /**
-     * @param mixed $query
-     * @param string $checkInDate
-     * @param string $checkOutDate
-     * @return mixed
+     * @param  mixed  $query
+     * @param  string  $checkInDate
+     * @param  string  $checkOutDate
      */
     public function scopeAvailableIn($query, $checkInDate, $checkOutDate): mixed
     {
@@ -125,9 +122,8 @@ class Rental extends Model
     }
 
     /**
-     * @param mixed $query
-     * @param string $cityName
-     * @return mixed
+     * @param  mixed  $query
+     * @param  string  $cityName
      */
     public function scopeByCity($query, $cityName): mixed
     {

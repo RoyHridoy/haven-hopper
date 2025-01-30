@@ -85,8 +85,7 @@ class Booking extends Model
     }
 
     /**
-     * @param mixed $query
-     * @return mixed
+     * @param  mixed  $query
      */
     public function scopeApproved($query): mixed
     {
