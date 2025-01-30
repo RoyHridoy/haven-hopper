@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
+use App\Http\Middleware\UsersOnlyMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -13,8 +14,8 @@ Route::get('/become-a-host', [BecomeHostController::class, 'index'])->name('host
 Route::get('/search', SearchController::class)->name('search');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('register-host', [BecomeHostController::class, 'generateRegisterForm'])->name('host.form');
-    Route::post('register-host', [BecomeHostController::class, 'register'])->name('host.register');
+    Route::get('register-host', [BecomeHostController::class, 'generateRegisterForm'])->name('host.form')->middleware(UsersOnlyMiddleware::class);
+    Route::post('register-host', [BecomeHostController::class, 'register'])->name('host.register')->middleware(UsersOnlyMiddleware::class);
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     Route::get('bookings', [BookingController::class, 'index'])->name('bookings.index');
