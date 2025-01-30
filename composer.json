@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.9",
         "rmsramos/activitylog": "^1.0",
         "spatie/laravel-activitylog": "^4.9",
+        "stripe/stripe-php": "^16.5",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {

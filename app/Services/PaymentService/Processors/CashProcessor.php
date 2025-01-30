@@ -12,6 +12,11 @@ class CashProcessor
     {
         $booking->update(['payment_status' => BookingPaymentStatus::PENDING]);
 
-        return redirect()->to($processor->getSuccessUrl());
+        return redirect()->to(route('bookings.index'))->with([
+            'message' => [
+                'body' => 'You have successfully created.',
+                'type' => 'success',
+            ],
+        ]);
     }
 }
