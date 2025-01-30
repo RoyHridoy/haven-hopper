@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\RentalApprovalStatus;
 use App\Enums\RentalType;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -96,5 +97,24 @@ class Rental extends Model
     public function favorites(): HasMany
     {
         return $this->hasMany(Favorite::class);
+    }
+
+    public function scopeApproved($query){
+        return $query->where('approval_status', RentalApprovalStatus::APPROVED);
+    }
+
+    public function scopeAvailableIn($query, $checkInDate, $checkOutDate){
+        return $query
+            ->whereDoesntHave('bookings', fn ($query) => $query
+            ->overlap(Carbon::parse($checkInDate), Carbon::parse($checkOutDate))
+            ->approved()
+        );
+    }
+
+    public function scopeByCity($query, $cityName)
+    {
+        return $query
+            ->whereHas('location', fn ($query) => $query
+            ->where('city', $cityName));
     }
 }
