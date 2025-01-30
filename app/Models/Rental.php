@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Rental extends Model
 {
@@ -27,6 +25,7 @@ class Rental extends Model
         'description',
         'approval_status',
         'rating',
+        'images',
         'owner_id',
         'location_id',
     ];
@@ -36,6 +35,7 @@ class Rental extends Model
         'total_guests' => 'integer',
         'approval_status' => RentalApprovalStatus::class,
         'rental_type' => RentalType::class,
+        'images' => 'array',
     ];
 
     /**
@@ -86,26 +86,6 @@ class Rental extends Model
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
-    }
-
-    /**
-     * Get all the gallery images of the rental.
-     *
-     * @return MorphMany<Image, $this>
-     */
-    public function galleries(): MorphMany
-    {
-        return $this->morphMany(Image::class, 'imageable')->where('image_role', 'gallery');
-    }
-
-    /**
-     * Get the featured image of the rental.
-     *
-     * @return MorphOne<Image, $this>
-     */
-    public function image(): MorphOne
-    {
-        return $this->morphOne(Image::class, 'imageable')->where('image_role', 'feature');
     }
 
     /**

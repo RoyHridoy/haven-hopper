@@ -34,6 +34,16 @@ class SearchController extends Controller
             ->paginate($request->per_page ?? 6)
             ->withQueryString();
 
+        $rentals->getCollection()->transform(function ($item) {
+            if (is_array($item->images)) {
+                $item->images = collect($item->images)
+                    ->map(fn ($image) => asset("storage/{$image}"))
+                    ->all();
+            }
+
+            return $item;
+        });
+
         return inertia()->render('Search', [
             'rentals' => $rentals,
             'cities' => CityResource::collection(config('cities')),

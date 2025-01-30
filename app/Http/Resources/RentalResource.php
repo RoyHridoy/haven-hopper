@@ -17,6 +17,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property string $check_out_time
  * @property LocationResource $location
  * @property AmenityResource $amenities
+ * @property string[] $images
  */
 class RentalResource extends JsonResource
 {
@@ -27,6 +28,12 @@ class RentalResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $images = null;
+        if ($this->images) {
+            $images = collect($this->images)
+                ->map(fn ($image) => asset("storage/{$image}"));
+        }
+
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -38,6 +45,7 @@ class RentalResource extends JsonResource
             'checkOutTime' => Carbon::parse($this->check_out_time)->format('h:i:s A'),
             'location' => new LocationResource($this->location),
             'amenities' => AmenityResource::collection($this->amenities),
+            'images' => $images,
         ];
     }
 }

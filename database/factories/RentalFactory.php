@@ -27,7 +27,7 @@ class RentalFactory extends Factory
             'price' => fake()->numberBetween(100, 1000),
             'description' => fake()->paragraph(),
             'total_guests' => fake()->numberBetween(1, 5),
-            'location_id' => Location::factory(),
+            'location_id' => Location::query()->inRandomOrder()->first()?->id,
             'owner_id' => User::query()
                 ->where('role', 'rental_owner')
                 ->where('status', 'active')
