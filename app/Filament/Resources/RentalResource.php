@@ -4,8 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Enums\RentalApprovalStatus;
 use App\Enums\RentalType;
+use App\Enums\UserRole;
+use App\Enums\UserStatus;
 use App\Filament\Resources\RentalResource\Pages;
 use App\Models\Rental;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -13,7 +16,10 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\MultiSelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\Rule;
 
 class RentalResource extends Resource
 {
@@ -23,13 +29,20 @@ class RentalResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $panel = filament()->getCurrentPanel();
+        $rentalOwnerId = $panel->getId() === 'host' ? auth()->id() : null;
+
         return $form
             ->schema([
                 TextInput::make('title')
-                    ->required(),
+                    ->required()
+                    ->maxLength(255)
+                    ->placeholder('Rental title'),
                 Select::make('rental_type')
                     ->required()
-                    ->options(RentalType::class),
+                    ->options(RentalType::class)
+                    ->rules([Rule::enum(RentalType::class)])
+                    ->native(false),
                 TextInput::make('price')
                     ->required()
                     ->numeric()
@@ -51,29 +64,65 @@ class RentalResource extends Resource
                 Select::make('amenities')
                     ->relationship('amenities', 'name')
                     ->multiple()
+                    ->exists('amenities', 'id')
                     ->preload()
                     ->searchable()
                     ->required(),
+                Select::make('location_id')
+                    ->relationship('location', 'city')
+                    ->required()
+                    ->exists('locations', 'id')
+                    ->native(false),
+                FileUpload::make('images')
+                    ->label('Rental Images')
+                    ->multiple()
+                    ->directory('rentals')
+                    ->image()
+                    ->imageEditor()
+                    ->imageEditorAspectRatios([
+                        '4:3',
+                    ])
+                    ->imagePreviewHeight('250')
+                    ->panelLayout('grid')
+                    ->reorderable(),
                 Textarea::make('description')
+                    ->nullable()
+                    ->string()
                     ->columnSpanFull(),
                 Select::make('approval_status')
                     ->required()
                     ->options(RentalApprovalStatus::class)
-                    ->default(RentalApprovalStatus::PENDING),
+                    ->default(RentalApprovalStatus::PENDING)
+                    ->rules([Rule::enum(RentalApprovalStatus::class)])
+                    ->visible($panel->getId() === 'admin'),
                 Select::make('owner_id')
-                    ->relationship('owner', 'name')
-                    ->required(),
-                Select::make('location_id')
-                    ->relationship('location', 'city')
-                    ->required(),
+                    ->relationship(
+                        'owner',
+                        'name',
+                        function ($query) {
+                            $query->where('role', UserRole::RENTAL_OWNER)->where('status', UserStatus::ACTIVE);
+                            if (auth()->user()->role === UserRole::RENTAL_OWNER) {
+                                return $query->where('id', auth()->id());
+                            }
+
+                            return $query;
+                        })
+                    ->default($rentalOwnerId)
+                    ->required()
+                    ->rules([
+                        Rule::exists('users', 'id')->where('role', UserRole::RENTAL_OWNER),
+                    ])
+                    ->native(false),
             ]);
     }
 
     public static function table(Table $table): Table
     {
+        $panel = filament()->getCurrentPanel();
+
         return $table
             ->columns([
-                TextColumn::make('title')
+                TextColumn::make('title')->words(4)
                     ->searchable(),
                 TextColumn::make('rental_type')
                     ->searchable(),
@@ -88,12 +137,13 @@ class RentalResource extends Resource
                     ->badge()
                     ->color(fn (RentalApprovalStatus $state) => match ($state) {
                         RentalApprovalStatus::APPROVED => 'success',
-                        RentalApprovalStatus::PENDING => '',
+                        RentalApprovalStatus::PENDING => 'warning',
                         RentalApprovalStatus::REJECTED => 'danger',
                     }),
                 TextColumn::make('owner.name')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->visible($panel->getId() === 'admin'),
                 TextColumn::make('location.city')
                     ->numeric()
                     ->label('City')
@@ -101,20 +151,23 @@ class RentalResource extends Resource
                 TextColumn::make('location.country')
                     ->numeric()
                     ->label('Country')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('amenities.name')
-                    ->badge()
                     ->separator(', ')
                     ->color('info'),
-
-                TextColumn::make('check_in_time'),
-                TextColumn::make('check_out_time'),
+                TextColumn::make('check_in_time')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('check_out_time')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('guest_on_requests')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('extra_guests_charge')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('rating')
                     ->numeric()
                     ->sortable(),
@@ -128,7 +181,12 @@ class RentalResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                MultiSelectFilter::make('type')
+                    ->options(RentalType::class)
+                    ->label('Rental Type'),
+                MultiSelectFilter::make('approval_status')
+                    ->options(RentalApprovalStatus::class)
+                    ->label('Approval Status'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -137,7 +195,14 @@ class RentalResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->modifyQueryUsing(function (Builder $query) use ($panel) {
+                if ($panel->getId() === 'host') {
+                    $query->where('owner_id', auth()->id());
+                }
+
+                return $query;
+            });
     }
 
     public static function getRelations(): array

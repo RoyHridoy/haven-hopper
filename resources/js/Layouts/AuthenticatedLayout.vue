@@ -56,12 +56,12 @@ const showingNavigationDropdown = ref(false)
                                 >
                                     Host: Pending
                                 </div>
-                                <div
+                                <a
+                                    href="/host"
                                     v-if="$page.props.auth.user.role === 'rental_owner'"
                                     class="rounded-sm border border-slate-300 px-4 py-2 font-bold text-slate-500 transition hover:border-slate-400 hover:text-slate-700"
+                                    >Host Panel</a
                                 >
-                                    Host
-                                </div>
                             </div>
                         </div>
 

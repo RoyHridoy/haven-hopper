@@ -24,7 +24,7 @@ class ListUsers extends ListRecords
     {
         return [
             'all' => Tab::make(),
-            'Want_to_host' => Tab::make()
+            'want_to_host' => Tab::make()
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('want_to_host', true))
                 ->icon('heroicon-o-users')
                 ->badge(User::query()->where('want_to_host', true)->count()),

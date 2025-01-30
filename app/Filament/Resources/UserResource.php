@@ -61,7 +61,8 @@ class UserResource extends Resource
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('email')
-                    ->searchable(),
+                    ->searchable()
+                    ->copyable(),
                 TextColumn::make('phone')
                     ->searchable(),
                 TextColumn::make('role')
@@ -90,9 +91,18 @@ class UserResource extends Resource
                 EditAction::make(),
                 Action::make('makeHost')
                     ->requiresConfirmation()
+                    ->visible(fn (User $record) => $record->want_to_host)
                     ->action(function (User $user) {
                         $user->update([
                             'role' => UserRole::RENTAL_OWNER,
+                            'want_to_host' => false,
+                        ]);
+                    }),
+                Action::make('reject')
+                    ->requiresConfirmation()
+                    ->visible(fn (User $record) => $record->want_to_host)
+                    ->action(function (User $user) {
+                        $user->update([
                             'want_to_host' => false,
                         ]);
                     }),
@@ -118,5 +128,10 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('want_to_host', true)->count();
     }
 }

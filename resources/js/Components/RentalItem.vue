@@ -2,6 +2,7 @@
 import { Link } from '@inertiajs/vue3'
 import PrimaryButton from './PrimaryButton.vue'
 import Svg from './Svg.vue'
+import placeholderImage from '../../../public/images/placeholder.webp'
 
 const props = defineProps({
     rental: {
@@ -14,11 +15,20 @@ const props = defineProps({
     <div class="group gap-8 overflow-hidden rounded shadow-lg transition-all hover:shadow-xl">
         <div class="relative z-20 h-64 overflow-hidden">
             <span class="absolute z-10 h-full w-full bg-black/20 transition-all group-hover:bg-black/15"></span>
-            <img
-                src="https://royhridoy.me/html/royme-preview/assets/img/portfolio/6.jpg"
-                alt=""
-                class="h-full w-full object-cover transition-all group-hover:scale-105"
-            />
+            <template v-if="rental.images">
+                <img
+                    :src="rental.images[0]"
+                    alt=""
+                    class="h-full w-full object-cover transition-all group-hover:scale-105"
+                />
+            </template>
+            <template v-if="!rental.images">
+                <img
+                    :src="placeholderImage"
+                    alt=""
+                    class="h-full w-full object-cover transition-all group-hover:scale-105"
+                />
+            </template>
             <div class="absolute bottom-0 left-0 z-20 flex rounded-tr-sm bg-slate-600 px-5 py-1 text-white">
                 <span class="text-sm">$</span>
                 <span class="text-2xl font-semibold">{{ rental.price.toFixed(2) }}</span>

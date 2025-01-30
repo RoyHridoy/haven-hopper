@@ -14,6 +14,10 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
+/**
+ * @property UserRole $role
+ * @property UserStatus $status
+ */
 class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -121,8 +125,8 @@ class User extends Authenticatable implements FilamentUser
     public function canAccessPanel(Panel $panel): bool
     {
         return match ($panel->getId()) {
-            'admin' => $this->role === UserRole::ADMIN->value,
-            'host' => $this->role === UserRole::RENTAL_OWNER->value,
+            'admin' => $this->role === UserRole::ADMIN,
+            'host' => $this->role === UserRole::RENTAL_OWNER,
             default => false,
         };
     }
