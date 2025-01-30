@@ -25,6 +25,8 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    totalPrice: Number,
+    totalStay: Number,
 })
 
 const form = useForm({
@@ -241,7 +243,9 @@ const bookNow = () => {
                 <div class="divide-y divide-gray-200">
                     <dl class="flex items-center justify-between gap-4 py-3">
                         <dt class="text-base font-normal text-gray-500">Price</dt>
-                        <dd class="text-base font-medium text-gray-900">$ {{ rental.price.toFixed(2) }}</dd>
+                        <dd class="text-base font-medium text-gray-900">
+                            {{ `${totalStay} x ` }} $ {{ rental.price.toFixed(2) }}
+                        </dd>
                     </dl>
 
                     <dl class="flex items-center justify-between gap-4 py-3">
@@ -255,8 +259,8 @@ const bookNow = () => {
                     </dl>
 
                     <dl class="flex items-center justify-between gap-4 py-3">
-                        <dt class="text-base font-bold text-gray-900">Total</dt>
-                        <dd class="text-base font-bold text-gray-900">${{ rental.price.toFixed(2) }}</dd>
+                        <dt class="text-base font-bold text-gray-900">Total Price</dt>
+                        <dd class="text-base font-bold text-gray-900">${{ totalPrice.toFixed(2) }}</dd>
                     </dl>
                 </div>
             </div>

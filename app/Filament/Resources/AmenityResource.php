@@ -16,14 +16,16 @@ class AmenityResource extends Resource
 {
     protected static ?string $model = Amenity::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-briefcase';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->required(),
+                    ->required()
+                    ->string()
+                    ->maxLength(255),
                 IconPicker::make('icon'),
             ]);
     }

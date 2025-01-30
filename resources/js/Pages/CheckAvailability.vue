@@ -94,6 +94,12 @@ const goToCheckout = () => {
         </template>
 
         <section class="bg-white antialiased">
+            <div
+                class="mx-auto mb-5 w-3/5 rounded-md bg-green-100 px-3 py-2 text-center font-bold text-green-900"
+                v-if="isAvailable"
+            >
+                This rental is available for booking.
+            </div>
             <div class="mx-auto grid max-w-screen-xl grid-cols-4 px-4 2xl:px-0">
                 <div class="col-span-2 col-start-2 space-y-4">
                     <div class="">
@@ -117,9 +123,9 @@ const goToCheckout = () => {
                             <button
                                 @click="goToCheckout"
                                 type="button"
-                                class="flex items-center justify-center rounded-lg bg-slate-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-300"
+                                class="flex items-center justify-center rounded-lg bg-green-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-slate-300"
                             >
-                                Go to Checkout
+                                Book Now
                             </button>
                         </div>
                     </div>

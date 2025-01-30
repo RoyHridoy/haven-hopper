@@ -12,6 +12,7 @@ use App\Models\Rental;
 use App\Models\User;
 use App\Services\PaymentService\PaymentFailedException;
 use App\Services\PaymentService\PaymentProcessor;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -41,22 +42,24 @@ class BookingController extends Controller
 
     public function availabilityValidate(BookAvailabilityRequest $request, Rental $rental): RedirectResponse
     {
-        return redirect()->back()->with([
-            'message' => [
-                'body' => 'Booking Available',
-                'type' => 'success',
-            ],
-        ]);
+        return redirect()->back();
     }
 
     public function checkout(Request $request, Rental $rental): Response
     {
         $availablePaymentMethods = PaymentProcessor::availableProviders();
 
+        $requestCheckInDate = (string) $request->query('checkInDate');
+        $requestCheckOutDate = (string) $request->query('checkOutDate');
+
+        $totalStay = Carbon::createFromDate($requestCheckInDate)->diffInDays(Carbon::createFromDate($requestCheckOutDate));
+
         return inertia()->render('Checkout', [
             'rental' => new RentalResource($rental->load('location')),
-            'checkInDate' => $request->query('checkInDate'),
-            'checkOutDate' => $request->query('checkOutDate'),
+            'totalStay' => $totalStay,
+            'totalPrice' => ($totalStay * $rental->price),
+            'checkInDate' => $requestCheckInDate,
+            'checkOutDate' => $requestCheckOutDate,
             'availablePaymentMethods' => $availablePaymentMethods,
         ]);
     }

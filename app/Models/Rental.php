@@ -4,13 +4,12 @@ namespace App\Models;
 
 use App\Enums\RentalApprovalStatus;
 use App\Enums\RentalType;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Rental extends Model
 {
@@ -27,6 +26,7 @@ class Rental extends Model
         'description',
         'approval_status',
         'rating',
+        'images',
         'owner_id',
         'location_id',
     ];
@@ -36,6 +36,7 @@ class Rental extends Model
         'total_guests' => 'integer',
         'approval_status' => RentalApprovalStatus::class,
         'rental_type' => RentalType::class,
+        'images' => 'array',
     ];
 
     /**
@@ -89,26 +90,6 @@ class Rental extends Model
     }
 
     /**
-     * Get all the gallery images of the rental.
-     *
-     * @return MorphMany<Image, $this>
-     */
-    public function galleries(): MorphMany
-    {
-        return $this->morphMany(Image::class, 'imageable')->where('image_role', 'gallery');
-    }
-
-    /**
-     * Get the featured image of the rental.
-     *
-     * @return MorphOne<Image, $this>
-     */
-    public function image(): MorphOne
-    {
-        return $this->morphOne(Image::class, 'imageable')->where('image_role', 'feature');
-    }
-
-    /**
      * Get the user who keep favorite this rental.
      *
      * @return HasMany<Favorite, $this>
@@ -116,5 +97,38 @@ class Rental extends Model
     public function favorites(): HasMany
     {
         return $this->hasMany(Favorite::class);
+    }
+
+    /**
+     * @param  mixed  $query
+     */
+    public function scopeApproved($query): mixed
+    {
+        return $query->where('approval_status', RentalApprovalStatus::APPROVED);
+    }
+
+    /**
+     * @param  mixed  $query
+     * @param  string  $checkInDate
+     * @param  string  $checkOutDate
+     */
+    public function scopeAvailableIn($query, $checkInDate, $checkOutDate): mixed
+    {
+        return $query
+            ->whereDoesntHave('bookings', fn ($query) => $query
+                ->overlap(Carbon::parse($checkInDate), Carbon::parse($checkOutDate))
+                ->approved()
+            );
+    }
+
+    /**
+     * @param  mixed  $query
+     * @param  string  $cityName
+     */
+    public function scopeByCity($query, $cityName): mixed
+    {
+        return $query
+            ->whereHas('location', fn ($query) => $query
+                ->where('city', $cityName));
     }
 }

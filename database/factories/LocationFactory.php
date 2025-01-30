@@ -21,7 +21,6 @@ class LocationFactory extends Factory
         return [
             'country' => config('country')[0]['name'],
             'city' => $cities[rand(0, count($cities) - 1)]['name'],
-            'state' => fake()->state(),
         ];
     }
 
