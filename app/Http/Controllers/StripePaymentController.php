@@ -8,6 +8,7 @@ use App\Models\Booking;
 use App\Services\PaymentService\PaymentProcessor;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Response;
 
 class StripePaymentController
 {
@@ -46,12 +47,7 @@ class StripePaymentController
                 'status' => BookingStatus::PENDING,
             ]);
 
-            return redirect()->route('bookings.index')->with([
-                'message' => [
-                    'body' => 'You have successfully failed to make payment.',
-                    'type' => 'error',
-                ],
-            ]);
+            return redirect()->route('bookings.index');
         }
 
         $booking->update([
@@ -59,16 +55,16 @@ class StripePaymentController
             'status' => BookingStatus::APPROVED,
         ]);
 
-        return redirect()->route('bookings.index')->with([
-            'message' => [
-                'body' => 'Successfully Created Booking',
-                'type' => 'success',
-            ],
-        ]);
+        return redirect()->route('payment.stripe.success.page');
     }
 
     public function failed(): string
     {
         return 'Payment failed';
+    }
+
+    public function successPage(): Response
+    {
+        return inertia()->render('Success');
     }
 }

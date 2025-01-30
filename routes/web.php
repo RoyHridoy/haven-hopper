@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\StripePaymentController;
 use App\Http\Middleware\UsersOnlyMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -32,10 +33,11 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::prefix('payment')->name('payment.')->group(function () {
-    Route::get('/process/{booking}', [\App\Http\Controllers\StripePaymentController::class, 'process'])->name('process');
-    Route::post('create/{booking}', [\App\Http\Controllers\StripePaymentController::class, 'create'])->name('stripe.create');
-    Route::get('success', [\App\Http\Controllers\StripePaymentController::class, 'success'])->name('stripe.success');
-    Route::get('failed', [\App\Http\Controllers\StripePaymentController::class, 'failed'])->name('stripe.failed');
+    Route::get('/process/{booking}', [StripePaymentController::class, 'process'])->name('process');
+    Route::post('create/{booking}', [StripePaymentController::class, 'create'])->name('stripe.create');
+    Route::get('success', [StripePaymentController::class, 'success'])->name('stripe.success');
+    Route::get('failed', [StripePaymentController::class, 'failed'])->name('stripe.failed');
+    Route::get('success-page', [StripePaymentController::class, 'successPage'])->name('stripe.success.page');
 });
 
 require __DIR__.'/auth.php';
