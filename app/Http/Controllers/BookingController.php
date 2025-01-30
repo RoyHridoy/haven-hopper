@@ -64,33 +64,15 @@ class BookingController extends Controller
         ]);
     }
 
-    public function storeBooking(BookStoreRequest $request, Rental $rental): RedirectResponse
+    public function storeBooking(BookStoreRequest $request, Rental $rental)
     {
         $bookingData = $request->validated();
+
+
         $bookingData['user_id'] = $request->user()->id;
-        DB::beginTransaction();
-        try {
 
-            $booking = $rental->bookings()->create($bookingData);
-            PaymentProcessor::process(User::where('id', auth()->user()->id)->first(), $booking, $bookingData['paymentMethod']);
+        $booking = $rental->bookings()->create($bookingData);
 
-            DB::commit();
-
-        } catch (PaymentFailedException $paymentFailedException) {
-
-            $booking->update([
-                'payment_status' => BookingPaymentStatus::FAILED,
-            ]);
-            DB::commit();
-        } catch (\Exception $exception) {
-            DB::rollBack();
-        }
-
-        return redirect()->route('bookings.index')->with([
-            'message' => [
-                'body' => 'Successfully Created Booking',
-                'type' => 'success',
-            ],
-        ]);
+        return PaymentProcessor::create()->process(User::where('id', auth()->user()->id)->first(), $booking, $bookingData['paymentMethod']);
     }
 }

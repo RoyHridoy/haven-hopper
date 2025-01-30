@@ -8,6 +8,6 @@
 <body>
 <h1>Payment Successfully Done</h1>
 
-{{ var_dump(request()->all()) }}
+{{ dd($paymentIntent) }}
 </body>
 </html>

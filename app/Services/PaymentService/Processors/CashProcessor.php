@@ -8,12 +8,10 @@ use App\Models\User;
 
 class CashProcessor
 {
-    public function __construct(public User $user, public Booking $booking) {}
-
-    public function process(): void
+    public function process(User $user, Booking $booking, $processor): mixed
     {
-        $this->booking->update([
-            'payment_status' => BookingPaymentStatus::PENDING,
-        ]);
+        $booking->update(['payment_status' => BookingPaymentStatus::PENDING]);
+
+        return redirect()->to($processor->getSuccessUrl());
     }
 }

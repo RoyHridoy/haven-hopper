@@ -32,9 +32,10 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::prefix('payment')->name('payment.')->group(function () {
-    Route::post('/process/{booking}', [\App\Http\Controllers\StripePaymentController::class, 'process'])->name('process');
+    Route::get('/process/{booking}', [\App\Http\Controllers\StripePaymentController::class, 'process'])->name('process');
     Route::post('create/{booking}', [\App\Http\Controllers\StripePaymentController::class, 'create'])->name('stripe.create');
     Route::get('success', [\App\Http\Controllers\StripePaymentController::class, 'success'])->name('stripe.success');
+    Route::get('failed', [\App\Http\Controllers\StripePaymentController::class, 'failed'])->name('stripe.failed');
 });
 
 require __DIR__.'/auth.php';
