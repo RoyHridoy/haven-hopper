@@ -152,19 +152,18 @@ class BookingResource extends Resource
                 EditAction::make()
                     ->visible(fn () => self::isAvailable()),
                 /** TODO:
-                 * Add Image for rental
                  * total price calculate
                  * write validation for amenities and locations
                  */
                 Action::make('approve')
                     ->visible(fn (Booking $booking) => $booking->status === BookingStatus::PENDING)
-                    ->before(function(Booking $booking){
+                    ->before(function (Booking $booking) {
 
                         $checkInDate = Carbon::parse($booking->check_in_date);
                         $checkOutDate = Carbon::parse($booking->check_out_date);
 
                         $overlapExists = Booking::where('rental_id', $booking->rental_id)
-                            ->where(function($query) use($checkInDate, $checkOutDate) {
+                            ->where(function ($query) use ($checkInDate, $checkOutDate) {
                                 $query->overlap($checkInDate, $checkOutDate, BookingStatus::APPROVED);
                             })->exists();
 
@@ -175,7 +174,7 @@ class BookingResource extends Resource
                                 ->danger()
                                 ->send();
                             throw ValidationException::withMessages([
-                                'rental is already booked for the selected dates'
+                                'rental is already booked for the selected dates',
                             ]);
                         }
                     })

@@ -8,6 +8,7 @@ use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Filament\Resources\RentalResource\Pages;
 use App\Models\Rental;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -72,6 +73,18 @@ class RentalResource extends Resource
                     ->required()
                     ->exists('locations', 'id')
                     ->native(false),
+                FileUpload::make('images')
+                    ->label('Rental Images')
+                    ->multiple()
+                    ->directory('rentals')
+                    ->image()
+                    ->imageEditor()
+                    ->imageEditorAspectRatios([
+                        '4:3',
+                    ])
+                    ->imagePreviewHeight('250')
+                    ->panelLayout('grid')
+                    ->reorderable(),
                 Textarea::make('description')
                     ->nullable()
                     ->string()

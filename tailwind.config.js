@@ -34,7 +34,7 @@ export default {
             },
             backgroundImage: {
                 'hero-bg': "url('/images/bg-hero.jpg')",
-                'rental-bg': "url('/images/rental-type-1.jpg')",
+                'rental-placeholder': "url('/images/placeholder.webp')",
             },
         },
     },
