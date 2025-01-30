@@ -97,8 +97,8 @@ class BookingResource extends Resource
                     ->color(fn (BookingStatus $state) => match ($state) {
                         BookingStatus::APPROVED => 'success',
                         BookingStatus::PENDING => 'warning',
-                        BookingStatus::REJECTED => 'danger',
-                        BookingStatus::CANCELLED => 'warning',
+                        BookingStatus::REJECTED => 'gray',
+                        BookingStatus::CANCELLED => 'danger',
                         BookingStatus::COMPLETED => 'info',
                     }),
                 TextColumn::make('price')
