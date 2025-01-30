@@ -269,7 +269,7 @@
 
 <script>
     // This is your test publishable API key.
-    const stripe = Stripe("{{ env('STRIPE_KEY') }}");
+    const stripe = Stripe("{{ config('services.stripe.key') }}");
 
     // The items the customer wants to buy
     const items = [{ id: "xl-tshirt", amount: 1000 }];

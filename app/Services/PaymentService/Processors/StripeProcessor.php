@@ -2,6 +2,8 @@
 
 namespace App\Services\PaymentService\Processors;
 
+use App\Models\Booking;
+use App\Models\User;
 use App\Services\PaymentService\Concern\PaymentProcessorConcern;
 use Inertia\Inertia;
 use Stripe\StripeClient;
@@ -12,12 +14,12 @@ class StripeProcessor extends PaymentProcessorConcern
 
     public function __construct()
     {
-        $this->client = new StripeClient(env('STRIPE_SECRET'));
+        $this->client = new StripeClient(config('services.stripe.secret'));
     }
 
-    public function process($user, $booking): mixed
+    public function process(User $user, Booking $booking): mixed
     {
-        return Inertia::location(route('payment.process', ['booking' => $booking->id]));//redirect()->route('payment.process', ['booking' => $booking->id]);
+        return Inertia::location(route('payment.process', ['booking' => $booking->id]));
     }
 
     public function client(): StripeClient

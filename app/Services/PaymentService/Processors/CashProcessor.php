@@ -8,7 +8,7 @@ use App\Models\User;
 
 class CashProcessor
 {
-    public function process(User $user, Booking $booking, $processor): mixed
+    public function process(User $user, Booking $booking, object $processor): mixed
     {
         $booking->update(['payment_status' => BookingPaymentStatus::PENDING]);
 

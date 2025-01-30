@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\BookingPaymentStatus;
 use App\Http\Requests\BookAvailabilityRequest;
 use App\Http\Requests\BookStoreRequest;
 use App\Http\Resources\BookingResource;
@@ -10,12 +9,10 @@ use App\Http\Resources\RentalResource;
 use App\Models\Booking;
 use App\Models\Rental;
 use App\Models\User;
-use App\Services\PaymentService\PaymentFailedException;
 use App\Services\PaymentService\PaymentProcessor;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Inertia\Response;
 
 class BookingController extends Controller
@@ -64,10 +61,9 @@ class BookingController extends Controller
         ]);
     }
 
-    public function storeBooking(BookStoreRequest $request, Rental $rental)
+    public function storeBooking(BookStoreRequest $request, Rental $rental): mixed
     {
         $bookingData = $request->validated();
-
 
         $bookingData['user_id'] = $request->user()->id;
 

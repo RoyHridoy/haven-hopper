@@ -61,10 +61,11 @@ class PaymentProcessor
         }
 
         $processor = $this->getProcessor($provider);
+
         return $processor->process($user, $booking, $this);
     }
 
-    public function getProcessor(string $provider) :mixed
+    public function getProcessor(string $provider): mixed
     {
         if (! in_array($provider, array_keys(static::$processors))) {
             throw new PaymentFailedException('Payment Processor not found');
@@ -80,7 +81,7 @@ class PaymentProcessor
         return new self($successUrl, $cancelUrl);
     }
 
-    public function hasProcessor($providerName): bool
+    public function hasProcessor(string $providerName): bool
     {
         return array_key_exists($providerName, static::$processors);
     }

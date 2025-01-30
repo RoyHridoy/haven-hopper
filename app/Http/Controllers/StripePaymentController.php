@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Enums\BookingPaymentStatus;
 use App\Enums\BookingStatus;
 use App\Models\Booking;
-use App\Services\PaymentService\PaymentFailedException;
 use App\Services\PaymentService\PaymentProcessor;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class StripePaymentController
@@ -16,18 +16,13 @@ class StripePaymentController
         return view('stripe.payments', ['booking' => $booking]);
     }
 
-    /**
-     * @throws PaymentFailedException
-     */
-    public function create(Booking $booking, Request $request)
+    public function create(Booking $booking, Request $request): mixed
     {
-
-
         $stripeInstance = PaymentProcessor::create()->getProcessor('stripe');
 
         $paymentIntent = $stripeInstance->client()->paymentIntents->create([
             'amount' => ($booking->total_price * 100),
-            'currency' => env('STRIPE_CURRENCY', 'usd'),
+            'currency' => config('services.stripe.currency'),
             'automatic_payment_methods' => [
                 'enabled' => true,
             ],
@@ -37,7 +32,7 @@ class StripePaymentController
         return response()->json(['clientSecret' => $paymentIntent->client_secret]);
     }
 
-    public function success(Request $request)
+    public function success(Request $request): RedirectResponse
     {
         $stripeInstance = PaymentProcessor::create()->getProcessor('stripe');
         $paymentIntent = $stripeInstance->client()->paymentIntents->retrieve($request->payment_intent);
@@ -72,7 +67,7 @@ class StripePaymentController
         ]);
     }
 
-    public function failed()
+    public function failed(): string
     {
         return 'Payment failed';
     }
