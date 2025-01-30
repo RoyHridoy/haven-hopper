@@ -77,12 +77,16 @@ class Booking extends Model
      * @param  mixed  $checkOutDate
      * @param  mixed  $status
      */
-    public function scopeOverlap($query, $checkInDate, $checkOutDate, $status): mixed
+    public function scopeOverlap($query, $checkInDate, $checkOutDate): mixed
     {
-        return $query->where('status', $status)
-            ->where(function ($query) use ($checkInDate, $checkOutDate) {
-                $query->where('check_in_date', '<', $checkOutDate)
-                    ->where('check_out_date', '>', $checkInDate);
-            });
+        return $query->where(function ($query) use ($checkInDate, $checkOutDate) {
+            $query->where('check_in_date', '<', $checkOutDate)
+                ->where('check_out_date', '>', $checkInDate);
+        });
+    }
+
+    public function scopeApproved($query): mixed
+    {
+        return $query->where('status', BookingStatus::APPROVED);
     }
 }

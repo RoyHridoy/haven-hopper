@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\BookingStatus;
 use App\Enums\RentalApprovalStatus;
 use App\Http\Resources\CityResource;
 use App\Models\Rental;
@@ -26,7 +25,7 @@ class SearchController extends Controller
             ->when($request->query('checkInDate') && $request->query('checkOutDate'), function ($query) use ($request) {
                 $checkInDate = Carbon::parse($request->query('checkInDate'));
                 $checkOutDate = Carbon::parse($request->query('checkOutDate'));
-                $query = $query->whereDoesntHave('bookings', fn ($query) => $query->overlap($checkInDate, $checkOutDate, BookingStatus::APPROVED));
+                $query = $query->whereDoesntHave('bookings', fn ($query) => $query->overlap($checkInDate, $checkOutDate)->approved());
             })
             ->when($request->query('city'), function ($query, $cityName) {
                 $query = $query->whereHas('location', fn ($query) => $query->where('city', $cityName));
