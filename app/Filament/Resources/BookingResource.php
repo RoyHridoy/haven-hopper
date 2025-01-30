@@ -6,9 +6,11 @@ use App\Enums\BookingPaymentStatus;
 use App\Enums\BookingStatus;
 use App\Filament\Resources\BookingResource\Pages;
 use App\Models\Booking;
+use Carbon\Carbon;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
@@ -17,6 +19,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\MultiSelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\ValidationException;
 
 class BookingResource extends Resource
 {
@@ -76,7 +79,8 @@ class BookingResource extends Resource
                 TextColumn::make('rental.title')
                     ->words(4)
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->label('Rental Name'),
                 TextColumn::make('check_in_date')
                     ->date()
                     ->sortable(),
@@ -84,7 +88,8 @@ class BookingResource extends Resource
                     ->date()
                     ->sortable(),
                 TextColumn::make('total_guests')
-                    ->sortable(),
+                    ->sortable()
+                    ->label('Guests'),
                 TextColumn::make('status')
                     ->searchable()
                     ->sortable()
@@ -104,7 +109,8 @@ class BookingResource extends Resource
                     ->sortable(),
                 TextColumn::make('tax')
                     ->money()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('total_price')
                     ->money()
                     ->sortable(),
@@ -134,6 +140,7 @@ class BookingResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('check_in_date', 'asc')
             ->filters([
                 MultiSelectFilter::make('payment_status')
                     ->options(BookingPaymentStatus::class),
@@ -145,21 +152,41 @@ class BookingResource extends Resource
                 EditAction::make()
                     ->visible(fn () => self::isAvailable()),
                 /** TODO:
-                 * Approve and reject button only available on want to book page
-                 * When approve booking, validate checkInDate and checkOutDate that slot is available or not
                  * Add Image for rental
                  * total price calculate
                  * write validation for amenities and locations
                  */
                 Action::make('approve')
+                    ->visible(fn (Booking $booking) => $booking->status === BookingStatus::PENDING)
+                    ->before(function(Booking $booking){
+
+                        $checkInDate = Carbon::parse($booking->check_in_date);
+                        $checkOutDate = Carbon::parse($booking->check_out_date);
+
+                        $overlapExists = Booking::where('rental_id', $booking->rental_id)
+                            ->where(function($query) use($checkInDate, $checkOutDate) {
+                                $query->overlap($checkInDate, $checkOutDate, BookingStatus::APPROVED);
+                            })->exists();
+
+                        if ($overlapExists) {
+                            Notification::make()
+                                ->title('Booking Conflict')
+                                ->body('This rental is already booked for the selected dates.')
+                                ->danger()
+                                ->send();
+                            throw ValidationException::withMessages([
+                                'rental is already booked for the selected dates'
+                            ]);
+                        }
+                    })
                     ->requiresConfirmation()
                     ->action(function (Booking $booking) {
                         $booking->update([
                             'status' => BookingStatus::APPROVED,
-                            'payment_status' => BookingPaymentStatus::PAID,
                         ]);
                     }),
                 Action::make('reject')
+                    ->visible(fn (Booking $record) => $record->status === BookingStatus::PENDING)
                     ->requiresConfirmation()
                     ->action(function (Booking $booking) {
                         $booking->update([

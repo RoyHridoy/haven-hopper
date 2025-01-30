@@ -25,8 +25,8 @@ class ListBookings extends ListRecords
             'all' => Tab::make(),
             'want_to_book' => Tab::make()
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('status', BookingStatus::PENDING))
-                ->icon('heroicon-o-calendar-date-range'),
+                ->icon('heroicon-o-calendar-date-range')
+                ->label('Booking Requests'),
         ];
     }
 }
-//
