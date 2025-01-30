@@ -151,10 +151,6 @@ class BookingResource extends Resource
             ->actions([
                 EditAction::make()
                     ->visible(fn () => self::isAvailable()),
-                /** TODO:
-                 * total price calculate
-                 * write validation for amenities and locations
-                 */
                 Action::make('approve')
                     ->visible(fn (Booking $booking) => $booking->status === BookingStatus::PENDING)
                     ->before(function (Booking $booking) {

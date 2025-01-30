@@ -14,7 +14,7 @@ class PaymentProcessor
     protected static array $processors = [
         'cash' => [
             'name' => 'Cash',
-            'description' => 'Pay when you check in',
+            'description' => 'Pay when you checked in',
             'processor' => CashProcessor::class,
         ],
     ];
