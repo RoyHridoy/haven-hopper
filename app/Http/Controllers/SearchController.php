@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\RentalApprovalStatus;
 use App\Http\Resources\CityResource;
 use App\Models\Rental;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Response;
 

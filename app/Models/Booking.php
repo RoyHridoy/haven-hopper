@@ -75,7 +75,6 @@ class Booking extends Model
      * @param  mixed  $query
      * @param  mixed  $checkInDate
      * @param  mixed  $checkOutDate
-     * @param  mixed  $status
      */
     public function scopeOverlap($query, $checkInDate, $checkOutDate): mixed
     {
@@ -85,6 +84,10 @@ class Booking extends Model
         });
     }
 
+    /**
+     * @param mixed $query
+     * @return mixed
+     */
     public function scopeApproved($query): mixed
     {
         return $query->where('status', BookingStatus::APPROVED);

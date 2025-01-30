@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class CheckUserBookingAbility implements ValidationRule
 {
-    public function __construct(protected $rentalId) {}
+    public function __construct(protected int $rentalId) {}
 
     /**
      * Run the validation rule.

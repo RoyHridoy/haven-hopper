@@ -12,7 +12,6 @@ use App\Models\Rental;
 use App\Models\User;
 use App\Services\PaymentService\PaymentFailedException;
 use App\Services\PaymentService\PaymentProcessor;
-
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -50,11 +49,10 @@ class BookingController extends Controller
     {
         $availablePaymentMethods = PaymentProcessor::availableProviders();
 
-        $requestCheckInDate= $request->query('checkInDate');
-        $requestCheckOutDate= $request->query('checkOutDate');
+        $requestCheckInDate = (string) $request->query('checkInDate');
+        $requestCheckOutDate = (string) $request->query('checkOutDate');
 
-        $totalStay =Carbon::createFromDate($requestCheckInDate)->diffInDays(Carbon::createFromDate($requestCheckOutDate));
-
+        $totalStay = Carbon::createFromDate($requestCheckInDate)->diffInDays(Carbon::createFromDate($requestCheckOutDate));
 
         return inertia()->render('Checkout', [
             'rental' => new RentalResource($rental->load('location')),

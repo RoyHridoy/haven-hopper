@@ -22,7 +22,7 @@ class CheckBookingDateAvailability implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (! Rental::where('id',$this->rentalId)->exists()) {
+        if (! Rental::where('id', $this->rentalId)->exists()) {
             $fail('The rental does not exists');
         }
 

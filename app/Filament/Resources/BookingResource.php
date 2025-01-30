@@ -160,7 +160,7 @@ class BookingResource extends Resource
 
                         $overlapExists = Booking::where('rental_id', $booking->rental_id)
                             ->where(function ($query) use ($checkInDate, $checkOutDate) {
-                                $query->overlap($checkInDate, $checkOutDate, BookingStatus::APPROVED);
+                                $query->overlap($checkInDate, $checkOutDate)->approved();
                             })->exists();
 
                         if ($overlapExists) {

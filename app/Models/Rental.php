@@ -99,22 +99,40 @@ class Rental extends Model
         return $this->hasMany(Favorite::class);
     }
 
-    public function scopeApproved($query){
+
+    /**
+     * @param mixed $query
+     * @return mixed
+     */
+    public function scopeApproved($query): mixed
+    {
         return $query->where('approval_status', RentalApprovalStatus::APPROVED);
     }
 
-    public function scopeAvailableIn($query, $checkInDate, $checkOutDate){
+    /**
+     * @param mixed $query
+     * @param string $checkInDate
+     * @param string $checkOutDate
+     * @return mixed
+     */
+    public function scopeAvailableIn($query, $checkInDate, $checkOutDate): mixed
+    {
         return $query
             ->whereDoesntHave('bookings', fn ($query) => $query
-            ->overlap(Carbon::parse($checkInDate), Carbon::parse($checkOutDate))
-            ->approved()
-        );
+                ->overlap(Carbon::parse($checkInDate), Carbon::parse($checkOutDate))
+                ->approved()
+            );
     }
 
-    public function scopeByCity($query, $cityName)
+    /**
+     * @param mixed $query
+     * @param string $cityName
+     * @return mixed
+     */
+    public function scopeByCity($query, $cityName): mixed
     {
         return $query
             ->whereHas('location', fn ($query) => $query
-            ->where('city', $cityName));
+                ->where('city', $cityName));
     }
 }
