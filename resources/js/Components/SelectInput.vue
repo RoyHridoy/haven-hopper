@@ -8,20 +8,25 @@ import Svg from './Svg.vue'
 const props = defineProps({
     options: Array,
     default: String,
+    label: String,
+    icon: {
+        type: String,
+        required: true,
+    },
 })
 
-const selected = ref(props.default || 'Choose City')
+const selected = ref(props.default || 'Select an option')
 </script>
 
 <template>
     <Listbox as="div" v-model="selected">
-        <ListboxLabel class="block text-sm/6 font-medium text-gray-900">Choose Destination</ListboxLabel>
+        <ListboxLabel class="block text-sm/6 font-medium text-gray-900">{{ label }}</ListboxLabel>
         <div class="relative mt-2">
             <ListboxButton
                 class="grid w-full cursor-default grid-cols-1 rounded border border-slate-300 bg-white py-1.5 pl-3 pr-2 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-300 transition hover:border-slate-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
             >
                 <span class="col-start-1 row-start-1 flex items-center gap-3 pr-6">
-                    <Svg name="location" class="size-4 text-slate-500"></Svg>
+                    <Svg :name="icon" class="size-4 text-slate-500"></Svg>
                     <span class="block truncate">{{ selected }}</span>
                 </span>
                 <ChevronUpDownIcon
@@ -52,7 +57,7 @@ const selected = ref(props.default || 'Choose City')
                             ]"
                         >
                             <div class="flex items-center">
-                                <Svg name="location" class="size-4 text-slate-500"></Svg>
+                                <Svg :name="icon" class="size-4 text-slate-500"></Svg>
                                 <span :class="[selected ? 'font-semibold' : 'font-normal', 'ml-3 block truncate']">{{
                                     option.name
                                 }}</span>

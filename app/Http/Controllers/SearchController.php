@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\BookingStatus;
-use App\Enums\RentalApprovalStatus;
+use App\Enums\RentalType;
 use App\Http\Resources\CityResource;
 use App\Models\Rental;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Response;
 
@@ -19,18 +17,18 @@ class SearchController extends Controller
     {
         $rentals = Rental::query()
             ->with(['location', 'amenities'])
-            ->where('approval_status', RentalApprovalStatus::APPROVED)
-            ->when($request->query('total_guests'),
+            ->approved()
+            ->when(
+                $request->query('total_guests'),
                 fn ($query, $totalGuest) => $query->where('total_guests', $totalGuest)
             )
-            ->when($request->query('checkInDate') && $request->query('checkOutDate'), function ($query) use ($request) {
-                $checkInDate = Carbon::parse($request->query('checkInDate'));
-                $checkOutDate = Carbon::parse($request->query('checkOutDate'));
-                $query = $query->whereDoesntHave('bookings', fn ($query) => $query->overlap($checkInDate, $checkOutDate, BookingStatus::APPROVED));
-            })
-            ->when($request->query('city'), function ($query, $cityName) {
-                $query = $query->whereHas('location', fn ($query) => $query->where('city', $cityName));
-            })->latest()
+            ->when(
+                $request->query('checkInDate') && $request->query('checkOutDate'),
+                fn ($query) => $query->availableIn($request->query('checkInDate'), $request->query('checkOutDate'))
+            )
+            ->when($request->query('category'), fn ($query, $categoryName) => $query->byCategory($categoryName))
+            ->when($request->query('city'), fn ($query, $cityName) => $query->byCity($cityName))
+            ->latest()
             ->paginate($request->per_page ?? 6)
             ->withQueryString();
 
@@ -44,9 +42,16 @@ class SearchController extends Controller
             return $item;
         });
 
+        $categories = collect(RentalType::cases())->map(function ($type) {
+            static $i = 1;
+
+            return ['id' => $i++, 'name' => $type];
+        });
+
         return inertia()->render('Search', [
             'rentals' => $rentals,
             'cities' => CityResource::collection(config('cities')),
+            'categories' => $categories,
             'filters' => $request->query(),
         ]);
     }

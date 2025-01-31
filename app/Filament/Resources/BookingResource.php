@@ -151,10 +151,6 @@ class BookingResource extends Resource
             ->actions([
                 EditAction::make()
                     ->visible(fn () => self::isAvailable()),
-                /** TODO:
-                 * total price calculate
-                 * write validation for amenities and locations
-                 */
                 Action::make('approve')
                     ->visible(fn (Booking $booking) => $booking->status === BookingStatus::PENDING)
                     ->before(function (Booking $booking) {
@@ -164,7 +160,7 @@ class BookingResource extends Resource
 
                         $overlapExists = Booking::where('rental_id', $booking->rental_id)
                             ->where(function ($query) use ($checkInDate, $checkOutDate) {
-                                $query->overlap($checkInDate, $checkOutDate, BookingStatus::APPROVED);
+                                $query->overlap($checkInDate, $checkOutDate)->approved();
                             })->exists();
 
                         if ($overlapExists) {

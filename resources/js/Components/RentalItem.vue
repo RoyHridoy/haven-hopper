@@ -43,11 +43,21 @@ const props = defineProps({
         </div>
         <div class="flex flex-col border-slate-300 p-5">
             <h3 class="text-xl font-semibold">
-                <a href="" class="line-clamp-2 text-slate-700 hover:text-slate-500" :title="rental.title">
+                <Link
+                    :href="route('rental.show', rental.id)"
+                    class="line-clamp-2 text-slate-700 hover:text-slate-500"
+                    :title="rental.title"
+                >
                     {{ rental.title }}
-                </a>
+                </Link>
             </h3>
-            <p class="mt-0.5 text-sm text-slate-500">{{ rental.location.city }}, {{ rental.location.country }}</p>
+            <div class="flex items-center gap-3.5">
+                <p class="mt-0.5 text-sm text-slate-600">{{ rental.location.city }}, {{ rental.location.country }}</p>
+                <span class="mt-0.5 h-3 w-0.5 rounded bg-slate-400"></span>
+                <p class="mt-0.5 text-sm capitalize text-slate-600">
+                    {{ rental.rentalType?.split('_').join(' ') || rental.rental_type?.split('_').join(' ') }}
+                </p>
+            </div>
             <ul class="mt-5 grid grid-cols-2 gap-1 text-slate-700">
                 <li class="flex items-center gap-1.5 capitalize">
                     <Svg name="users" class="size-4"></Svg>

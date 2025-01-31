@@ -15,6 +15,7 @@ const props = defineProps({
     canRegister: Boolean,
     rentals: Object,
     cities: Array,
+    categories: Array,
     filters: Object,
 })
 
@@ -23,6 +24,7 @@ const form = useForm({
     checkInDate: props.filters.checkInDate || '',
     checkOutDate: props.filters.checkOutDate || '',
     total_guests: props.filters.total_guests || '',
+    category: props.filters.category || '',
 })
 
 const submitForm = () => {
@@ -65,17 +67,28 @@ const mergePaginationLinks = (links) => {
     <HomeNavigation :can-login :can-register />
 
     <section class="py-16">
-        <div class="mx-auto grid max-w-6xl grid-cols-8 items-end gap-5 rounded-lg bg-gray-200/90 p-5 shadow-md">
-            <div class="col-span-2">
-                <SelectInput v-model="form.city" :options="cities" :default="props.filters.city" />
+        <div class="mx-auto flex max-w-4xl flex-col gap-5 rounded-lg bg-gray-200/90 p-5 shadow-md">
+            <div class="grid grid-cols-2 gap-5">
+                <SelectInput
+                    v-model="form.city"
+                    :options="cities"
+                    :default="props.filters.city"
+                    label="Choose Destination"
+                    icon="location"
+                />
+                <SelectInput
+                    v-model="form.category"
+                    :options="categories"
+                    :default="props.filters.category"
+                    label="Choose Category"
+                    icon="home"
+                />
             </div>
-            <div class="col-span-3 w-full">
-                <InputLabel class="mb-2.5 block text-sm/6 font-medium text-gray-900">Choose Dates</InputLabel>
-                <DateRangePicker v-model:checkInDate="form.checkInDate" v-model:checkOutDate="form.checkOutDate" />
-            </div>
-            <div class="col-span-3 grid grid-cols-4 items-end gap-5">
-                <div class="col-span-2">
-                    <InputLabel class="mb-2.5 block text-sm/6 font-medium text-gray-900">Who</InputLabel>
+            <div class="grid grid-cols-4 gap-5">
+                <div class="col-span-2 w-full">
+                    <DateRangePicker v-model:checkInDate="form.checkInDate" v-model:checkOutDate="form.checkOutDate" />
+                </div>
+                <div class="col-span-1">
                     <input
                         v-model="form.total_guests"
                         id="guest"
@@ -84,8 +97,10 @@ const mergePaginationLinks = (links) => {
                         placeholder="Add Guests"
                     />
                 </div>
-                <PrimaryButton @click="submitForm" class="rounded">Search</PrimaryButton>
-                <SecondaryButton @click="clearForm">Clear</SecondaryButton>
+                <div class="col-span-1 grid grid-cols-2 gap-5">
+                    <PrimaryButton @click="submitForm" class="rounded">Search</PrimaryButton>
+                    <SecondaryButton @click="clearForm">Clear</SecondaryButton>
+                </div>
             </div>
         </div>
     </section>

@@ -81,7 +81,10 @@ class RentalResource extends Resource
                     ->imageEditor()
                     ->imageEditorAspectRatios([
                         '4:3',
+                        '16:9',
                     ])
+                    ->maxFiles(4)
+                    ->maxSize(1024)
                     ->imagePreviewHeight('250')
                     ->panelLayout('grid')
                     ->reorderable(),
@@ -106,7 +109,8 @@ class RentalResource extends Resource
                             }
 
                             return $query;
-                        })
+                        }
+                    )
                     ->default($rentalOwnerId)
                     ->required()
                     ->rules([
@@ -180,6 +184,7 @@ class RentalResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 MultiSelectFilter::make('type')
                     ->options(RentalType::class)
