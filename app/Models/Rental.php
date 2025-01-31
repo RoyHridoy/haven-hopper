@@ -131,4 +131,13 @@ class Rental extends Model
             ->whereHas('location', fn ($query) => $query
                 ->where('city', $cityName));
     }
+
+    /**
+     * @param  mixed  $query
+     * @param  mixed  $categoryName
+     */
+    public function scopeByCategory($query, $categoryName): mixed
+    {
+        return $query->where('rental_type', $categoryName);
+    }
 }
