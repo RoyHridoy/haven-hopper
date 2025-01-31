@@ -106,7 +106,8 @@ class RentalResource extends Resource
                             }
 
                             return $query;
-                        })
+                        }
+                    )
                     ->default($rentalOwnerId)
                     ->required()
                     ->rules([
@@ -180,6 +181,7 @@ class RentalResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 MultiSelectFilter::make('type')
                     ->options(RentalType::class)

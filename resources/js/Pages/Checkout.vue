@@ -225,7 +225,7 @@ const bookNow = () => {
                             </div>
 
                             <div>
-                                <InputLabel for="addressLineTwo" value="Address Line 1" />
+                                <InputLabel for="addressLineTwo" value="Address Line 2" />
 
                                 <TextInput
                                     id="addressLineTwo"
