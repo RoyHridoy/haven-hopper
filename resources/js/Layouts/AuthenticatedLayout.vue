@@ -39,12 +39,7 @@ const showingNavigationDropdown = ref(false)
                                 </Link>
 
                                 <Link
-                                    v-if="
-                                        !(
-                                            $page.props.auth.user.want_to_host ||
-                                            $page.props.auth.user.role === 'rental_owner'
-                                        )
-                                    "
+                                    v-if="!$page.props.auth.user.want_to_host && $page.props.auth.user.role === 'user'"
                                     :href="route('host.form')"
                                     class="rounded-sm border border-slate-300 px-4 py-2 font-bold text-slate-500 transition hover:border-slate-400 hover:text-slate-700"
                                 >
