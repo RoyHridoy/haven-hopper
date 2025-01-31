@@ -5,6 +5,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RentalShowController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Middleware\UsersOnlyMiddleware;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', HomeController::class)->name('home');
 Route::get('/become-a-host', [BecomeHostController::class, 'index'])->name('host.index');
 Route::get('/search', SearchController::class)->name('search');
+Route::get('/rentals/{rental}', RentalShowController::class)->name('rental.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('register-host', [BecomeHostController::class, 'generateRegisterForm'])->name('host.form')->middleware(UsersOnlyMiddleware::class);

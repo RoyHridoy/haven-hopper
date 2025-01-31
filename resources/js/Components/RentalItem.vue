@@ -43,9 +43,13 @@ const props = defineProps({
         </div>
         <div class="flex flex-col border-slate-300 p-5">
             <h3 class="text-xl font-semibold">
-                <a href="" class="line-clamp-2 text-slate-700 hover:text-slate-500" :title="rental.title">
+                <Link
+                    :href="route('rental.show', rental.id)"
+                    class="line-clamp-2 text-slate-700 hover:text-slate-500"
+                    :title="rental.title"
+                >
                     {{ rental.title }}
-                </a>
+                </Link>
             </h3>
             <div class="flex items-center gap-3.5">
                 <p class="mt-0.5 text-sm text-slate-600">{{ rental.location.city }}, {{ rental.location.country }}</p>

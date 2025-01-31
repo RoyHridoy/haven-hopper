@@ -81,7 +81,10 @@ class RentalResource extends Resource
                     ->imageEditor()
                     ->imageEditorAspectRatios([
                         '4:3',
+                        '16:9',
                     ])
+                    ->maxFiles(4)
+                    ->maxSize(1024)
                     ->imagePreviewHeight('250')
                     ->panelLayout('grid')
                     ->reorderable(),
