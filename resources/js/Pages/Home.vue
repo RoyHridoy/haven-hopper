@@ -59,7 +59,12 @@ const submitSearch = () => {
                     <h2 class="mb-3 text-2xl font-bold capitalize text-slate-700">Find your perfect place</h2>
                     <div class="flex flex-col gap-4">
                         <div>
-                            <SelectInput v-model="form.city" :options="cities" />
+                            <SelectInput
+                                v-model="form.city"
+                                :options="cities"
+                                label="Choose Destination"
+                                icon="location"
+                            />
                         </div>
                         <div class="flex gap-5">
                             <div class="w-full">
@@ -94,8 +99,8 @@ const submitSearch = () => {
             <div class="mx-auto max-w-6xl">
                 <h2 class="text-center text-3xl font-bold text-slate-600">Find a Place That Fits Your Comfort</h2>
                 <div class="mt-10 grid grid-cols-3 gap-8">
-                    <a
-                        href=""
+                    <Link
+                        :href="route('search', { category: 'apartment' })"
                         class="group flex flex-col items-center justify-center bg-slate-200 py-8 text-center shadow-2xl shadow-transparent transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-xl"
                     >
                         <div
@@ -104,9 +109,9 @@ const submitSearch = () => {
                             <Svg name="apartment" class="size-10"></Svg>
                         </div>
                         <h4 class="px-5 pt-3 text-xl font-semibold text-slate-800">Apartment</h4>
-                    </a>
-                    <a
-                        href=""
+                    </Link>
+                    <Link
+                        :href="route('search', { category: 'hotel' })"
                         class="group flex flex-col items-center justify-center bg-slate-200 py-8 text-center shadow-2xl shadow-transparent transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-xl"
                     >
                         <div
@@ -115,9 +120,9 @@ const submitSearch = () => {
                             <Svg name="hotel" class="size-10"></Svg>
                         </div>
                         <h4 class="px-5 pt-3 text-xl font-semibold text-slate-800">Hotel</h4>
-                    </a>
-                    <a
-                        href=""
+                    </Link>
+                    <Link
+                        :href="route('search', { category: 'guest_house' })"
                         class="group flex flex-col items-center justify-center bg-slate-200 py-8 text-center shadow-2xl shadow-transparent transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-xl"
                     >
                         <div
@@ -126,7 +131,7 @@ const submitSearch = () => {
                             <Svg name="home" class="size-10"></Svg>
                         </div>
                         <h4 class="px-5 pt-3 text-xl font-semibold text-slate-800">Guesthouse</h4>
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>

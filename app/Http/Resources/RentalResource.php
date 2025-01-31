@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @property int $id
+ * @property string $rental_type
  * @property string $title
  * @property string $rental_type
  * @property int $price
@@ -36,6 +37,7 @@ class RentalResource extends JsonResource
 
         return [
             'id' => $this->id,
+            'rentalType' => $this->rental_type,
             'title' => $this->title,
             'type' => $this->rental_type,
             'price' => $this->price,
