@@ -59,7 +59,12 @@ const submitSearch = () => {
                     <h2 class="mb-3 text-2xl font-bold capitalize text-slate-700">Find your perfect place</h2>
                     <div class="flex flex-col gap-4">
                         <div>
-                            <SelectInput v-model="form.city" :options="cities" />
+                            <SelectInput
+                                v-model="form.city"
+                                :options="cities"
+                                label="Choose Destination"
+                                icon="location"
+                            />
                         </div>
                         <div class="flex gap-5">
                             <div class="w-full">
