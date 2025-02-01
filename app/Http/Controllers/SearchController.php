@@ -20,7 +20,7 @@ class SearchController extends Controller
             ->approved()
             ->when(
                 $request->query('total_guests'),
-                fn ($query, $totalGuest) => $query->where('total_guests', $totalGuest)
+                fn ($query, $totalGuest) => $query->where('total_guests', '>=', $totalGuest)
             )
             ->when(
                 $request->query('checkInDate') && $request->query('checkOutDate'),
