@@ -8,6 +8,7 @@ use App\Models\Amenity;
 use App\Models\Location;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\File;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Rental>
@@ -33,7 +34,25 @@ class RentalFactory extends Factory
                 ->where('status', 'active')
                 ->inRandomOrder()
                 ->first()?->id ?? User::factory()->rentalOwner(),
+            'images' => $this->getRandomRentalImages(),
         ];
+    }
+
+    /**
+     * Get random image paths from public/images/rental
+     *
+     * @return array
+     */
+    private function getRandomRentalImages(): array
+    {
+        $imageDir = public_path('storage/rental');
+        $allImages = File::exists($imageDir) ? File::files($imageDir) : [];
+        return collect($allImages)
+            ->map(fn($file) => 'rental/' . $file->getFilename())
+            ->shuffle()
+            ->take(fake()->numberBetween(1, 6))
+            ->values()
+            ->all();
     }
 
     public function approved(): static
