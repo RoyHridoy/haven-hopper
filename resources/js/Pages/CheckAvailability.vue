@@ -8,7 +8,7 @@ import { ref } from 'vue'
 
 const props = defineProps({
     rental: {},
-    bookedDates: Array
+    bookedDates: Array,
 })
 
 const isAvailable = ref(false)
