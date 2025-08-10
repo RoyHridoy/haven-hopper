@@ -49,10 +49,9 @@ const disabledDates = props.bookedDates.flatMap(({ check_in_date, check_out_date
 // Helper to check if a date is disabled
 const isBooked = (date) => {
     return disabledDates.some(
-        (d) =>
-            d.getFullYear() === date.getFullYear() &&
-            d.getMonth() === date.getMonth() &&
-            d.getDate() === date.getDate(),
+        d => d.getFullYear() === date.getFullYear() &&
+             d.getMonth() === date.getMonth() &&
+             d.getDate() === date.getDate()
     )
 }
 
@@ -75,15 +74,15 @@ watch(selectedDate, (newValue) => {
         placeholder="Choose Booking Date"
     >
         <template #day="{ day, date }">
-            <div v-if="isBooked(date)" class="group relative">
+            <div v-if="isBooked(date)" class="relative group">
                 <span
-                    class="flex h-8 w-8 cursor-not-allowed items-center justify-center text-red-600"
-                    style="pointer-events: none"
+                    class="flex items-center justify-center w-8 h-8 text-red-600 cursor-not-allowed"
+                    style="pointer-events: none;"
                 >
                     &#10060;
                 </span>
                 <div
-                    class="absolute left-1/2 z-10 mt-1 hidden -translate-x-1/2 rounded bg-red-600 px-2 py-1 text-xs text-white shadow group-hover:block"
+                    class="absolute z-10 hidden group-hover:block left-1/2 -translate-x-1/2 mt-1 px-2 py-1 text-xs text-white bg-red-600 rounded shadow"
                 >
                     already booked
                 </div>
