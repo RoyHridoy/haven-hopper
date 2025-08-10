@@ -8,6 +8,7 @@ import { ref } from 'vue'
 
 const props = defineProps({
     rental: {},
+    bookedDates: Array
 })
 
 const isAvailable = ref(false)
@@ -106,6 +107,7 @@ const goToCheckout = () => {
                         <DateRangePicker
                             v-model:checkInDate="form.check_in_date"
                             v-model:checkOutDate="form.check_out_date"
+                            :bookedDates="bookedDates"
                         />
                         <InputError class="mt-2" :message="form.errors.check_in_date" />
                         <InputError class="mt-2" :message="form.errors.check_out_date" />

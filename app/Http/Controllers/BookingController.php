@@ -32,8 +32,12 @@ class BookingController extends Controller
 
     public function checkAvailability(Rental $rental): Response
     {
+        // already booking dates
+        $bookedDates = Booking::where('rental_id', $rental->id)->approved()->get(['check_in_date', 'check_out_date']);
+
         return inertia()->render('CheckAvailability', [
             'rental' => new RentalResource($rental->load('location')),
+            'bookedDates' => $bookedDates,
         ]);
     }
 
